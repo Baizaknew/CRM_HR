@@ -287,7 +287,6 @@ Temporary Items
 # .idea/modules
 # *.iml
 # *.ipr
-apps/
 # CMake
 cmake-build-*/
 

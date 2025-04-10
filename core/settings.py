@@ -24,6 +24,10 @@ INSTALLED_APPS = [
     # installed_apps
 
     # my_apps
+    'apps.user',
+    'apps.vacancy',
+    'apps.interview',
+    'apps.candidate',
 ]
 
 MIDDLEWARE = [
