@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     "ckeditor",
     "rest_framework",
     "rest_framework_simplejwt",
+    "drf_spectacular",
 
     # my_apps
     'apps.user',
@@ -107,5 +108,13 @@ AUTH_USER_MODEL = 'user.User'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Hire Flow',
+    'DESCRIPTION': 'A system for automating the hiring of an employee in a company',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
