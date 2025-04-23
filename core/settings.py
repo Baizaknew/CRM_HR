@@ -23,6 +23,8 @@ INSTALLED_APPS = [
 
     # installed_apps
     "ckeditor",
+    "rest_framework",
+    "rest_framework_simplejwt",
 
     # my_apps
     'apps.user',
