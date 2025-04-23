@@ -6,12 +6,21 @@ from ckeditor.fields import RichTextField
 from apps.utils.base_model import BaseModel
 from apps.vacancy.choices import Department, City, Priority
 
-
 User = get_user_model()
+
+
+def get_default_vacancy_status_pk():
+    """Возвращает дефолтный статус для Вакансии при создании."""
+    try:
+        status = VacancyStatus.objects.get(is_default=True)
+        return status.pk
+    except VacancyStatus.DoesNotExist:
+        return None
 
 
 class VacancyStatus(BaseModel):
     name = models.CharField("Статус", max_length=100)
+    is_default = models.BooleanField("Статус по умолчанию", default=False)
 
     class Meta:
         verbose_name = "Статус вакансии"
@@ -27,12 +36,12 @@ class Vacancy(BaseModel):
     city = models.CharField("Город", choices=City.choices, max_length=255)
     priority = models.CharField("Приоритет", choices=Priority.choices, max_length=255)
     status = models.ForeignKey(VacancyStatus, related_name="vacancies", on_delete=models.CASCADE,
-                               verbose_name="Статус")
+                               verbose_name="Статус", default=get_default_vacancy_status_pk())
     department_lead = models.ForeignKey(User, related_name="dl_vacancies", on_delete=models.CASCADE,
                                verbose_name="Руководитель")
     recruiter = models.ForeignKey(User, related_name="rc_vacancies", on_delete=models.CASCADE,
                                verbose_name="Рекрутер")
-    requirements = RichTextField("Требования к вакансии")
+    requirements = RichTextField("Требования к кандидату")
     responsibilities = RichTextField("Обязанности кандидата")
     min_salary = models.IntegerField("Минимальная зарплата")
     max_salary = models.IntegerField("Максимальная зарплата")
