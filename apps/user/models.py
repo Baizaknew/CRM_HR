@@ -1,3 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
+from apps.user.choices import UserRoleChoices
+
+
+class User(AbstractUser):
+    role = models.CharField("Роль", choices=UserRoleChoices.choices, max_length=30)
+
+    def __str__(self):
+        return self.username
