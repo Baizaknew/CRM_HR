@@ -2,7 +2,7 @@ django==4.2
 psycopg2-binary==2.9.9
 pillow==10.4.0
 python-dotenv==1.0.1
-django-ckeditor==6.7.2
+django-ckeditor==6.6.1
 djangorestframework==3.16.0
 djangorestframework_simplejwt==5.5.0
 drf-spectacular==0.28.0
