@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.vacancy.models import Vacancy, VacancyStatus
+from apps.vacancy.models import Vacancy, VacancyStatus, VacancyRequest
 
 
 @admin.register(Vacancy)
@@ -11,3 +11,4 @@ class VacancyAdmin(admin.ModelAdmin):
     readonly_fields = ('opened_at', 'closed_at', 'time_to_offer')
 
 admin.site.register(VacancyStatus)
+admin.site.register(VacancyRequest)
