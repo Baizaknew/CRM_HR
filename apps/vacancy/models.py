@@ -39,7 +39,8 @@ class VacancyRequest(VacancyBaseModel):
     approver = models.ForeignKey(User, related_name="vacancy_approvers", on_delete=models.SET_NULL,
                                  blank=True, null=True, verbose_name="Согласующий")
     rejected_reason = models.CharField("Причина отклонения", max_length=500, blank=True, null=True)
-    status = models.CharField("Статус", choices=VacancyRequestStatus.choices, max_length=50)
+    status = models.CharField("Статус", choices=VacancyRequestStatus.choices, max_length=50,
+                              default=VacancyRequestStatus.IN_REVIEW)
     approved_at = models.DateTimeField("Дата согласования HR", null=True, blank=True)
     min_salary = models.IntegerField("Минимальная зарплата", null=True, blank=True)
     max_salary = models.IntegerField("Максимальная зарплата", null=True, blank=True)
