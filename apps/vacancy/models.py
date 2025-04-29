@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 
 from ckeditor.fields import RichTextField
 
-from apps.utils.base_model import BaseModel
+from apps.utils.base_models import BaseModel, BaseCommendModel
 from apps.vacancy.choices import Department, City, Priority, VacancyRequestStatus
 
 User = get_user_model()
@@ -77,3 +77,13 @@ class Vacancy(VacancyBaseModel):
 
     def __str__(self):
         return self.title
+
+
+class VacancyRequestComment(BaseCommendModel):
+    vacancy_request = models.ForeignKey(VacancyRequest, related_name="comments", on_delete=models.SET_NULL,
+                                        verbose_name="Заявка на подбор", null=True, blank=True)
+
+
+class VacancyComment(BaseCommendModel):
+    vacancy = models.ForeignKey(Vacancy, related_name="comments", on_delete=models.SET_NULL,
+                                verbose_name="Вакансия", null=True, blank=True)
