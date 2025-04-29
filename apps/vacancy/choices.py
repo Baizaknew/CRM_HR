@@ -46,10 +46,3 @@ class Priority(TextChoices):
     MEDIUM = 'P3', 'Нормальный'
     LOW = 'P4', 'Низкий'
     LOWEST = 'P5', 'Наименьший'
-
-
-class VacancyRequestStatus(TextChoices):
-    IN_REVIEW = 'IN_REVIEW', 'На рассмотрении'
-    NEEDS_REVISION = 'NEEDS_REVISION', 'Требует доработки'
-    APPROVED = 'APPROVED', 'Одобрено'
-    REJECTED = 'REJECTED', 'Отклонено'

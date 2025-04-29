@@ -1,7 +1,7 @@
 from rest_framework.permissions import BasePermission
 
 from apps.user.choices import UserRole
-from apps.vacancy.choices import VacancyRequestStatus
+from apps.vacancy_request.choices import VacancyRequestStatus
 
 
 class IsHrLeadOrDepartmentHead(BasePermission):

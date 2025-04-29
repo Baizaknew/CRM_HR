@@ -11,7 +11,7 @@ swagger_urls = [
 
 api_urls = [
     path('users/', include('apps.user.urls')),
-    path('vacancies/', include('apps.vacancy.urls')),
+    path('vacancies/', include('apps.vacancy_request.urls')),
 ]
 
 urlpatterns = [

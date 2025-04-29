@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     # my_apps
     'apps.user',
     'apps.vacancy',
+    'apps.vacancy_request',
     'apps.interview',
     'apps.candidate',
 ]

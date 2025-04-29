@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
 
-from apps.vacancy.models import VacancyRequest
+from apps.vacancy_request.models import VacancyRequest
 
 
 User = get_user_model()

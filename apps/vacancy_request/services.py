@@ -1,8 +1,8 @@
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 
-from apps.vacancy.choices import VacancyRequestStatus
-from apps.vacancy.models import VacancyRequest
+from apps.vacancy_request.choices import VacancyRequestStatus
+from apps.vacancy_request.models import VacancyRequest
 
 User = get_user_model()
 
