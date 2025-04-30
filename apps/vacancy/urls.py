@@ -5,7 +5,7 @@ from django.urls import path, include
 from apps.vacancy.views import VacancyModelViewSet
 
 router = DefaultRouter()
-router.register('', VacancyModelViewSet)
+router.register('', VacancyModelViewSet, basename='vacancy')
 
 urlpatterns = [
     path('', include(router.urls)),
