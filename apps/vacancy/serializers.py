@@ -50,5 +50,5 @@ class VacancyUpdateSerializerForRecruiter(serializers.ModelSerializer):
 class VacancyCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vacancy
-        fields = ('title', 'department', 'city', 'requirements', 'responsibilities', 'priority', 'department_lead',
-                  'recruiter', 'vacancy_request')
+        fields = ('title', 'department', 'city', 'requirements', 'responsibilities',
+                  'department_lead', 'vacancy_request', 'status', 'salary',)
