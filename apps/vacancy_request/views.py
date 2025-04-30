@@ -42,7 +42,7 @@ class VacancyRequestModelViewSet(ModelViewSet):
         elif self.action in ('list', 'retrieve'):
             return (IsHrLeadOrDepartmentHead(), IsAuthenticated())
         elif self.action in ('update', 'partial_update'):
-            return (IsDepartmentHead(), CanEditWhenNeedsRevisions())
+            return (IsDepartmentHead(), CanEditWhenNeedsRevisions(), IsOwner())
         elif self.action in ('approve', 'reject', 'send_for_revision'):
             return (IsHrLead(), CanAdminActOnReview())
         elif self.action == 'resubmit':
