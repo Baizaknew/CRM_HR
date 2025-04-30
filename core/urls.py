@@ -7,7 +7,7 @@ from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView, 
 api_urls = [
     path('users/', include('apps.user.urls')),
     path('vacancies/', include('apps.vacancy.urls')),
-    path('vacancies-requests/', include('apps.vacancy_request.urls')),
+    path('vacancy-requests/', include('apps.vacancy_request.urls')),
 
     # swagger docs
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
