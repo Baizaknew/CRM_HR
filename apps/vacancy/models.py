@@ -24,7 +24,7 @@ class VacancyStatus(BaseModel):
 class Vacancy(VacancyBaseModel):
     priority = models.CharField("Приоритет", choices=Priority.choices, max_length=50, default=Priority.MEDIUM)
     status = models.ForeignKey(VacancyStatus, related_name="vacancies", on_delete=models.PROTECT,
-                               verbose_name="Статус",)# default=get_default_vacancy_status_pk())
+                               verbose_name="Статус",)
     department_lead = models.ForeignKey(User, related_name="dl_vacancies", on_delete=models.PROTECT,
                                verbose_name="Руководитель отдела")
     recruiter = models.ForeignKey(User, related_name="rc_vacancies", on_delete=models.SET_NULL,
