@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from apps.user.choices import UserRole
+from apps.vacancy.services import VacancyService
 from apps.vacancy_request.models import VacancyRequest
 from apps.vacancy_request.permissions import IsHrLeadOrDepartmentHead, IsDepartmentHead, IsHrLead, IsOwner, \
     CanEditWhenNeedsRevisions, CanAdminActOnReview, CanResubmitWhenNeedsRevisions
@@ -54,6 +55,7 @@ class VacancyRequestModelViewSet(ModelViewSet):
     def approve(self, request, pk=None):
         instance = self.get_object()
         updated_instance = VacancyRequestService.approve(instance, request.user)
+        VacancyService.create(instance)
         serializer = VacancyRequestDetailSerializer(updated_instance, context={'request': request})
         return Response(serializer.data)
 
