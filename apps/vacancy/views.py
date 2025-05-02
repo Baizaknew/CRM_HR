@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
@@ -10,6 +11,7 @@ from apps.vacancy.serializers import VacancyListSerializerForDepartmentHead, \
 from apps.vacancy_request.permissions import IsHrLead
 
 
+@extend_schema(tags=['vacancy'])
 class VacancyModelViewSet(ModelViewSet):
     queryset = Vacancy.objects.select_related("department_lead", "status", "recruiter")
 

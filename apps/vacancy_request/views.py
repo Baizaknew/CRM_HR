@@ -1,3 +1,5 @@
+from drf_spectacular.utils import extend_schema
+
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -13,7 +15,7 @@ from apps.vacancy_request.serializers import VacancyRequestCreateSerializer, Vac
     VacancyRequestRejectSerializer, VacancyRequestRevisionSerializer, VacancyRequestSendForRevisionSerializer
 from apps.vacancy_request.services import VacancyRequestService
 
-
+@extend_schema(tags=['vacancy-request'])
 class VacancyRequestModelViewSet(ModelViewSet):
     queryset = VacancyRequest.objects.select_related('requester', 'approver').all()
     serializer_map = {
