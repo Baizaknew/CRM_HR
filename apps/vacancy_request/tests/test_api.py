@@ -175,10 +175,10 @@ class VacancyRequestAPITests(APITestCase):
         self.assertEqual(response.data['department'], data['department'])
 
         # Проверка Базы данных
-        self.req_dh1_in_review.refresh_from_db()
-        self.assertEqual(self.req_dh1_needs_revision.title, data['title'])
-        self.assertEqual(self.req_dh1_needs_revision.department, data['department'])
-        self.assertEqual(self.req_dh1_needs_revision.status, VacancyRequestStatus.NEEDS_REVISION)
+        updated_vacancy_request = VacancyRequest.objects.get(pk=response.data['id'])
+        self.assertEqual(updated_vacancy_request.title, data['title'])
+        self.assertEqual(updated_vacancy_request.department, data['department'])
+        self.assertEqual(updated_vacancy_request.status, VacancyRequestStatus.NEEDS_REVISION)
 
     def test_update_permissions_by_not_owner_in_needs_revision(self):
         self.client.force_authenticate(self.dh_2)
@@ -187,11 +187,12 @@ class VacancyRequestAPITests(APITestCase):
             'title': 'Изменение с permissions'
         }
         response = self.client.patch(url, data=data)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND) # 404 а не 403, потому что get_queryset
+                                                                          # написан таким образом
 
     def test_update_inappropriate_status(self):
         self.client.force_authenticate(self.dh_1)
-        url = self.detail_url(self.req_dh2_in_review.pk)
+        url = self.detail_url(self.req_dh1_in_review.pk)
         data = {
             'title': 'Изменение не в подходящем статусе'
         }

@@ -14,7 +14,7 @@ class VacancyRequestTestCase(TestCase):
     def setUp(self):
         self.department_lead = DepartmentHeadFactory()
         self.hr_admin = HrLeadFactory()
-        self.vacancy_request = VacancyRequestFactory()
+        self.vacancy_request = VacancyRequestFactory(requester=self.department_lead)
 
     def test_set_vacancy_request_attribs(self):
         test_instance = VacancyRequestService.set_vacancy_request_attribs(
