@@ -10,6 +10,7 @@ User = get_user_model()
 class VacancyRequestService:
     @staticmethod
     def set_vacancy_request_attribs(vacancy_request: VacancyRequest, **kwargs):
+        """Метод для обновления полей Заявки"""
         for key, value in kwargs.items():
             setattr(vacancy_request, key, value)
 
