@@ -11,7 +11,7 @@ class VacancyService:
     @staticmethod
     def get_default_status() -> VacancyStatus:
         try:
-            return VacancyStatus.objects.get(is_default=True).status
+            return VacancyStatus.objects.get(is_default=True)
         except VacancyStatus.DoesNotExist:
             return VacancyStatus.objects.create(is_default=True, name="На рассмотрении")
 
@@ -27,7 +27,7 @@ class VacancyService:
             'responsibilities': instance.responsibilities,
             'department_lead': instance.requester.pk,
             'vacancy_request': instance.pk,
-            'status': VacancyService.get_default_status(),
+            'status': VacancyService.get_default_status().pk,
             'salary': f'от {instance.min_salary} до {instance.max_salary}',
         }
         serializer = VacancyCreateSerializer(data=data)
