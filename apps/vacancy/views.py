@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from apps.user.choices import UserRole
 from apps.vacancy.models import Vacancy
-from apps.vacancy.permissions import IsHrLeadOrAssignedRecruiter
+from apps.vacancy.permissions import IsAssignedRecruiter
 from apps.vacancy.serializers import VacancyListSerializerForDepartmentHead, \
     VacancyListSerializerForHRandRecruiter, VacancyDetailSerializer, VacancyUpdateSerializerForHrLead, \
     VacancyUpdateSerializerForRecruiter
@@ -35,7 +35,7 @@ class VacancyModelViewSet(ModelViewSet):
 
     def get_permissions(self):
         if self.action in ("update", "partial_update", "retrieve"):
-            return (IsAuthenticated(), IsHrLeadOrAssignedRecruiter())
+            return (IsAuthenticated(), IsAssignedRecruiter(), IsHrLead())
         elif self.action == "destroy":
             return (IsAuthenticated(), IsHrLead())
         return (IsAuthenticated(),)
