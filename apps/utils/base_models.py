@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from ckeditor.fields import RichTextField
-
 from apps.vacancy.choices import Department, City
 
 User = get_user_model()
@@ -34,8 +32,8 @@ class VacancyBaseModel(BaseModel):
     title = models.CharField("Название", max_length=255)
     department = models.CharField("Отдел", choices=Department.choices, max_length=50)
     city = models.CharField("Город", choices=City.choices, max_length=50)
-    requirements = RichTextField("Требования к кандидату")
-    responsibilities = RichTextField("Обязанности кандидата")
+    requirements = models.TextField("Требования к кандидату")
+    responsibilities = models.TextField("Обязанности кандидата")
 
     class Meta:
         abstract = True
