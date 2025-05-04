@@ -1,4 +1,5 @@
 from drf_spectacular.utils import extend_schema
+from rest_framework import status
 
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -57,7 +58,13 @@ class VacancyRequestModelViewSet(ModelViewSet):
     def approve(self, request, pk=None):
         instance = self.get_object()
         updated_instance = VacancyRequestService.approve(instance, request.user)
-        VacancyService.create(instance)
+        created_vacancy = VacancyService.create(instance)
+        if created_vacancy is None:
+            return Response(
+                {'messgae': 'Ошибка при создании вакансии'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
         serializer = VacancyRequestDetailSerializer(updated_instance, context={'request': request})
         return Response(serializer.data)
 

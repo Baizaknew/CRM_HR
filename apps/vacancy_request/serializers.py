@@ -34,10 +34,12 @@ class VacancyRequestListSerializer(serializers.ModelSerializer):
 class VacancyRequestDetailSerializer(serializers.ModelSerializer):
     requester = UserSimpleSerializer(read_only=True)
     approver = UserSimpleSerializer(read_only=True)
+    vacancy = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = VacancyRequest
         fields = ('id', 'title', 'department', 'city', 'status', 'requester',
-                  'requirements', 'responsibilities', 'approver',
+                  'requirements', 'responsibilities', 'approver', 'vacancy',
                   'rejected_reason', 'created_at', 'updated_at', 'approved_at', 'min_salary', 'max_salary')
 
 

@@ -1,13 +1,15 @@
+from django.utils import timezone
 from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from apps.user.choices import UserRole
 from apps.vacancy.models import Vacancy
-from apps.vacancy.permissions import IsAssignedRecruiter
+from apps.vacancy.permissions import IsHrLeadOrAssignedRecruiter, IsVacancyOwner
 from apps.vacancy.serializers import VacancyListSerializerForDepartmentHead, \
     VacancyListSerializerForHRandRecruiter, VacancyDetailSerializer, VacancyUpdateSerializerForHrLead, \
     VacancyUpdateSerializerForRecruiter
+from apps.vacancy.services import VacancyService
 from apps.vacancy_request.permissions import IsHrLead
 
 
@@ -34,8 +36,30 @@ class VacancyModelViewSet(ModelViewSet):
         return VacancyDetailSerializer
 
     def get_permissions(self):
-        if self.action in ("update", "partial_update", "retrieve"):
-            return (IsAuthenticated(), IsAssignedRecruiter(), IsHrLead())
+        if self.action in ("update", "partial_update",):
+            return (IsAuthenticated(), IsHrLeadOrAssignedRecruiter(),)
         elif self.action == "destroy":
             return (IsAuthenticated(), IsHrLead())
+        elif self.action == "retrieve":
+            return (IsVacancyOwner(),)
         return (IsAuthenticated(),)
+
+    def perform_update(self, serializer):
+        instance = serializer.instance
+        validated_data = serializer.validated_data
+        new_status = validated_data.get('status')
+
+        save_kwargs = {}
+
+        if new_status:
+            if new_status.is_closed:
+                if not instance.status or not instance.status.is_closed:
+                    instance.closed_at = timezone.now()
+                    save_kwargs['closed_at'] = timezone.now()
+            elif new_status.is_opened:
+                if not instance.status or not instance.status.is_opened:
+                    instance.opened_at = timezone.now()
+                    save_kwargs['opened_at'] = timezone.now()
+
+        super().perform_update(serializer)
+

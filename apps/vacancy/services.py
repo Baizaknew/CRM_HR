@@ -1,6 +1,7 @@
-from django.forms import model_to_dict
+from django.utils import timezone
+from rest_framework.exceptions import ValidationError
 
-from apps.vacancy.models import VacancyStatus
+from apps.vacancy.models import VacancyStatus, Vacancy
 from apps.vacancy.serializers import VacancyCreateSerializer
 from apps.vacancy_request.models import VacancyRequest
 
@@ -15,9 +16,8 @@ class VacancyService:
         except VacancyStatus.DoesNotExist:
             return VacancyStatus.objects.create(is_default=True, name="На рассмотрении")
 
-
     @staticmethod
-    def create(instance: VacancyRequest) -> VacancyCreateSerializer:
+    def create(instance: VacancyRequest) -> Vacancy | None:
         """Создает вакансию"""
         data = {
             'title': instance.title,
@@ -28,9 +28,16 @@ class VacancyService:
             'department_lead': instance.requester.pk,
             'vacancy_request': instance.pk,
             'status': VacancyService.get_default_status().pk,
-            'salary': f'от {instance.min_salary} до {instance.max_salary}',
         }
+
+        if instance.max_salary:
+            data['salary'] = f'от {instance.min_salary if instance.min_salary else 0} до {instance.max_salary}'
+
         serializer = VacancyCreateSerializer(data=data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-        return serializer
+        try:
+            serializer.is_valid(raise_exception=True)
+            vacancy_instance = serializer.save()
+            return vacancy_instance
+        except ValidationError as e:
+            # Логирование потом сделаю
+            return None
