@@ -31,7 +31,7 @@ class VacancyService:
             'status': VacancyService.get_default_status().pk,
         }
 
-        if instance.max_salary:
+        if instance.max_salary is not None:
             data['salary'] = f'от {instance.min_salary if instance.min_salary else 0} до {instance.max_salary}'
 
         serializer = VacancyCreateSerializer(data=data)
