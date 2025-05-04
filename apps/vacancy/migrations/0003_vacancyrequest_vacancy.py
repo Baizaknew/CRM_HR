@@ -9,7 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('vacancy', '0001_initial'),
+        ('vacancy', '0002_create_default_vacancy_status'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
