@@ -19,7 +19,9 @@ class VacancyModelViewSet(ModelViewSet):
     queryset = Vacancy.objects.select_related("department_lead", "status", "recruiter")
 
     def get_queryset(self):
-        if self.request.user.role == UserRole.DEPARTMENT_HEAD:
+        if not self.request.user.is_authenticated:
+            return self.queryset.none()
+        elif self.request.user.role == UserRole.DEPARTMENT_HEAD:
             return self.queryset.filter(department_lead=self.request.user)
         elif self.request.user.role == UserRole.RECRUITER:
             return self.queryset.filter(recruiter=self.request.user)
@@ -42,7 +44,7 @@ class VacancyModelViewSet(ModelViewSet):
         elif self.action == "destroy":
             return (IsAuthenticated(), IsHrLead())
         elif self.action == "retrieve":
-            return (IsVacancyOwner(),)
+            return (IsAuthenticated(), IsVacancyOwner(),)
         return (IsAuthenticated(),)
 
     def perform_update(self, serializer):
