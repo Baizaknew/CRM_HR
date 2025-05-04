@@ -6,10 +6,11 @@ from rest_framework.viewsets import ModelViewSet
 from apps.user.choices import UserRole
 from apps.vacancy.models import Vacancy
 from apps.vacancy.permissions import IsHrLeadOrAssignedRecruiter, IsVacancyOwner
-from apps.vacancy.serializers import VacancyListSerializerForDepartmentHead, \
-    VacancyListSerializerForHRandRecruiter, VacancyDetailSerializer, VacancyUpdateSerializerForHrLead, \
-    VacancyUpdateSerializerForRecruiter
-from apps.vacancy.services import VacancyService
+from apps.vacancy.serializers import (VacancyListSerializerForDepartmentHead,
+                                      VacancyListSerializerForHRandRecruiter,
+                                      VacancyDetailSerializer,
+                                      VacancyUpdateSerializerForHrLead,
+                                      VacancyUpdateSerializerForRecruiter)
 from apps.vacancy_request.permissions import IsHrLead
 
 
@@ -62,4 +63,3 @@ class VacancyModelViewSet(ModelViewSet):
                     save_kwargs['opened_at'] = timezone.now()
 
         super().perform_update(serializer)
-
