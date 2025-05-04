@@ -12,6 +12,11 @@ User = get_user_model()
 class VacancyStatus(BaseModel):
     name = models.CharField("Статус", max_length=100, unique=True)
     is_default = models.BooleanField("Статус по умолчанию", default=False)
+    is_opened = models.BooleanField("Триггер даты открытия", default=False,
+                                    help_text="Отметьте, если при переходе в этот статус нужно установить дату начала"
+                                              "работы")
+    is_closed = models.BooleanField("Является закрытым статусом", default=False,
+                                    help_text="Отметьте, если при переходе в этот статус нужно установить дату начала")
 
     class Meta:
         verbose_name = "Статус вакансии"
