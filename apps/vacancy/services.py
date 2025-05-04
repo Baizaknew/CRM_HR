@@ -14,7 +14,8 @@ class VacancyService:
         try:
             return VacancyStatus.objects.get(is_default=True)
         except VacancyStatus.DoesNotExist:
-            return VacancyStatus.objects.create(is_default=True, name="На рассмотрении")
+            # TODO Добавить логирование
+            raise ValidationError('Отсутствует дефолтный статус для новых вакансий!')
 
     @staticmethod
     def create(instance: VacancyRequest) -> Vacancy | None:
@@ -39,5 +40,5 @@ class VacancyService:
             vacancy_instance = serializer.save()
             return vacancy_instance
         except ValidationError as e:
-            # Логирование потом сделаю
+            # TODO Логирование
             return None
