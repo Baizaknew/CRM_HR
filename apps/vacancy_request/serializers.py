@@ -16,9 +16,10 @@ class UserSimpleSerializer(serializers.ModelSerializer):
 
 
 class VacancyRequestCreateSerializer(serializers.ModelSerializer):
+    requester = UserSimpleSerializer(read_only=True)
     class Meta:
         model = VacancyRequest
-        fields = ('id', 'title', 'department', 'city', 'requirements', 'responsibilities', 'min_salary', 'max_salary',)
+        fields = ('id', 'title', 'department', 'city', 'requirements', 'responsibilities', 'min_salary', 'max_salary', 'requester')
 
 
 class VacancyRequestListSerializer(serializers.ModelSerializer):
