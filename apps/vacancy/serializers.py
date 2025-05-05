@@ -4,6 +4,12 @@ from apps.vacancy.models import Vacancy
 from apps.vacancy_request.serializers import UserSimpleSerializer
 
 
+class SimpleVacancySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vacancy
+        fields = ('id', 'title',)
+
+
 class VacancyListSerializerForHRandRecruiter(serializers.ModelSerializer):
     recruiter = UserSimpleSerializer(read_only=True)
     department_lead = UserSimpleSerializer(read_only=True)

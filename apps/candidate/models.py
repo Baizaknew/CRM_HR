@@ -9,7 +9,7 @@ from apps.vacancy.models import Vacancy
 User = get_user_model()
 
 
-class CandidateTags(BaseModel):
+class CandidateTag(BaseModel):
     title = models.CharField("Название", max_length=100)
 
     class Meta:
@@ -23,6 +23,12 @@ class CandidateTags(BaseModel):
 class CandidateNote(BaseModel):
     text = models.TextField("Заметка")
     candidate = models.ForeignKey("Candidate", on_delete=models.CASCADE, verbose_name="Кандидат")
+    added_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL,
+        blank=True, null=True,
+        verbose_name="Добавил",
+        related_name="notes",
+    )
 
     class Meta:
         verbose_name = "Заметка"
@@ -35,7 +41,12 @@ class CandidateNote(BaseModel):
 class CandidateReference(BaseModel):
     text = models.TextField("Текст")
     candidate = models.ForeignKey("Candidate", on_delete=models.CASCADE, verbose_name="Кандидат")
-
+    added_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL,
+        blank=True, null=True,
+        verbose_name="Добавил",
+        related_name="references",
+    )
     class Meta:
         verbose_name = "Обратная связь по кандидату"
         verbose_name_plural = "Обратная связь по кандидатам"
@@ -47,6 +58,7 @@ class CandidateReference(BaseModel):
 class CandidateApplicationStatus(BaseStatusModel):
     is_rejected = models.BooleanField("Статус означает отказ кандидату?", default=False)
     is_success = models.BooleanField("Статус означает, что успешный найм?", default=False)
+    is_default = models.BooleanField("Статус по умолчанию", default=False)
     order = models.IntegerField("Очередность", unique=True)
 
     class Meta:
@@ -66,19 +78,32 @@ class CandidateSource(BaseModel):
 
 
 class CandidateApplication(BaseModel):
-    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE, verbose_name="Вакансия")
+    vacancy = models.ForeignKey(
+        Vacancy,
+        on_delete=models.CASCADE,
+        verbose_name="Вакансия",
+        related_name="applications",
+    )
     candidate = models.ForeignKey(
         "Candidate",
         on_delete=models.CASCADE,
-        verbose_name="Кандидат"
+        verbose_name="Кандидат",
+        related_name="applications",
     )
     status = models.ForeignKey(
         CandidateApplicationStatus,
         on_delete=models.PROTECT,
-        verbose_name="Статус"
+        verbose_name="Статус",
+        related_name="applications",
+    )
+    recruiter = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        blank=True, null=True,
+        verbose_name="Рекрутер",
+        related_name="candidate_applications",
     )
     rejected_reason = models.CharField("Причина отказа", max_length=100, blank=True, null=True)
-    recruiter = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Рекрутер")
 
     class Meta:
         verbose_name = "Заявка кандидата на вакансию"
@@ -100,7 +125,7 @@ class Candidate(BaseModel):
     phone_number = models.CharField("Номер телефона", max_length=20, blank=True, null=True)
     email = models.EmailField("Почта", blank=True, null=True)
     cover_letter = models.TextField("Сопроводительное письмо", blank=True, null=True)
-    tags = models.ManyToManyField(CandidateTags, blank=True, null=True, verbose_name="Теги")
+    tags = models.ManyToManyField(CandidateTag, verbose_name="Теги")
     vacancy = models.ManyToManyField(Vacancy, through=CandidateApplication)
     salary_expectation = models.CharField("Зарплатные ожидания", max_length=100, blank=True, null=True)
     source = models.ForeignKey(
