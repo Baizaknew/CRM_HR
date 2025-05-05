@@ -37,3 +37,10 @@ class VacancyBaseModel(BaseModel):
 
     class Meta:
         abstract = True
+
+
+class BaseStatusModel(BaseModel):
+    name = models.CharField("Статус", max_length=100, unique=True)
+
+    class Meta:
+        abstract = True
