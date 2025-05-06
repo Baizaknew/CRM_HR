@@ -48,7 +48,7 @@ class CandidateListSerializer(serializers.ModelSerializer):
         model = Candidate
         fields = ('id', 'full_name', 'applications', 'created_at', 'source_type')
 
-    def get_full_name(self, obj):
+    def get_full_name(self, obj) -> str:
         parts = [obj.last_name, obj.first_name, obj.patronymic]
         return " ".join(filter(None, parts))
 

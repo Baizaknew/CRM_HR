@@ -29,11 +29,11 @@ class VacancyModelViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == "list":
-            if self.request.user.role == UserRole.DEPARTMENT_HEAD:
+            if self.request.user.is_authenticated and self.request.user.role == UserRole.DEPARTMENT_HEAD:
                 return VacancyListSerializerForDepartmentHead
             return VacancyListSerializerForHRandRecruiter
         elif self.action in ("update", "partial_update"):
-            if self.request.user.role == UserRole.RECRUITER:
+            if self.request.user.is_authenticated and self.request.user.role == UserRole.RECRUITER:
                 return VacancyUpdateSerializerForRecruiter
             return VacancyUpdateSerializerForHrLead
         return VacancyDetailSerializer
