@@ -45,14 +45,14 @@ class VacancyRequestTestCase(TestCase):
         self.assertEqual(test_instance.rejected_reason, 'Просто так')
 
     def test_send_for_revision(self):
-        test_instance = VacancyRequestService.send_for_revision(self.vacancy_request)
+        test_instance = VacancyRequestService.send_for_revision(self.vacancy_request, self.hr_admin)
         self.assertEqual(test_instance, self.vacancy_request)
         self.assertEqual(test_instance.approved_at, None)
         self.assertEqual(test_instance.approver, None)
         self.assertEqual(test_instance.status, VacancyRequestStatus.NEEDS_REVISION)
 
     def test_resubmit(self):
-        test_instance = VacancyRequestService.resubmit(self.vacancy_request)
+        test_instance = VacancyRequestService.resubmit(self.vacancy_request, self.department_lead)
         self.assertEqual(test_instance, self.vacancy_request)
         self.assertEqual(test_instance.approved_at, None)
         self.assertEqual(test_instance.approver, None)

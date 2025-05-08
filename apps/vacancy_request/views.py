@@ -13,7 +13,8 @@ from apps.vacancy_request.permissions import IsHrLeadOrDepartmentHead, IsDepartm
     CanEditWhenNeedsRevisions, CanAdminActOnReview, CanResubmitWhenNeedsRevisions
 from apps.vacancy_request.serializers import VacancyRequestCreateSerializer, VacancyRequestListSerializer, \
     VacancyRequestDetailSerializer, VacancyRequestResubmitSerializer, VacancyRequestApproveSerializer, \
-    VacancyRequestRejectSerializer, VacancyRequestRevisionSerializer, VacancyRequestSendForRevisionSerializer
+    VacancyRequestRejectSerializer, VacancyRequestRevisionSerializer, VacancyRequestSendForRevisionSerializer, \
+    VacancyRequestChangeHistorySerializer
 from apps.vacancy_request.services import VacancyRequestService
 
 @extend_schema(tags=['vacancy-request'])
@@ -30,6 +31,7 @@ class VacancyRequestModelViewSet(ModelViewSet):
         'send_for_revision': VacancyRequestSendForRevisionSerializer,
         'update': VacancyRequestRevisionSerializer,
         'partial_update': VacancyRequestRevisionSerializer,
+        'changes_history': VacancyRequestChangeHistorySerializer,
     }
 
     def get_queryset(self):
@@ -43,7 +45,7 @@ class VacancyRequestModelViewSet(ModelViewSet):
     def get_permissions(self):
         if self.action == 'create':
             return (IsDepartmentHead(), IsAuthenticated())
-        elif self.action in ('list', 'retrieve'):
+        elif self.action in ('list', 'retrieve', 'changes_history'):
             return (IsHrLeadOrDepartmentHead(), IsAuthenticated())
         elif self.action in ('update', 'partial_update'):
             return (IsDepartmentHead(), CanEditWhenNeedsRevisions(), IsOwner())
@@ -84,7 +86,7 @@ class VacancyRequestModelViewSet(ModelViewSet):
     @action(detail=True, methods=['post'], url_path='send-for-revision')
     def send_for_revision(self, request, pk=None):
         instance = self.get_object()
-        updated_instance = VacancyRequestService.send_for_revision(instance)
+        updated_instance = VacancyRequestService.send_for_revision(instance, request.user)
 
         serializer = VacancyRequestDetailSerializer(updated_instance, context={'request': request})
         return Response(serializer.data)
@@ -95,8 +97,15 @@ class VacancyRequestModelViewSet(ModelViewSet):
         serializer = VacancyRequestResubmitSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        updated_instance = VacancyRequestService.resubmit(instance)
+        updated_instance = VacancyRequestService.resubmit(instance, request.user)
         serializer = VacancyRequestDetailSerializer(updated_instance, context={'request': request})
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'], url_path='changes-history')
+    def changes_history(self, request, pk=None):
+        instance = self.get_object()
+        history_qs = instance.changes.select_related('user')
+        serializer = VacancyRequestChangeHistorySerializer(history_qs, many=True)
         return Response(serializer.data)
 
     def perform_create(self, serializer):

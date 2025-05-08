@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from apps.utils.base_models import BaseCommendModel
+from apps.utils.base_models import BaseCommendModel, BaseHistoryChangesModel
 from apps.utils.base_models import VacancyBaseModel
 from apps.vacancy_request.choices import VacancyRequestStatus
 
@@ -34,3 +34,25 @@ class VacancyRequestComment(BaseCommendModel):
     vacancy_request = models.ForeignKey(VacancyRequest, related_name="comments", on_delete=models.SET_NULL,
                                         verbose_name="Заявка на подбор", null=True, blank=True)
 
+    class Meta:
+        verbose_name = "Комментарий к Заявке на подбор"
+        verbose_name_plural = "Комментарии к Заявкам на подбор"
+
+    def __str__(self):
+        return self.text
+
+
+class VacancyRequestChangeHistory(BaseHistoryChangesModel):
+    vacancy_request = models.ForeignKey(
+        VacancyRequest,
+        related_name="changes",
+        on_delete=models.SET_NULL,
+        blank=True, null=True
+    )
+
+    class Meta:
+        verbose_name = "История изменений к Заявке на подбор"
+        verbose_name_plural = "Истории изменений к Заявкам на подбор"
+
+    def __str__(self):
+        return self.comment

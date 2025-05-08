@@ -44,3 +44,13 @@ class BaseStatusModel(BaseModel):
 
     class Meta:
         abstract = True
+
+
+class BaseHistoryChangesModel(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Пользователь")
+    old_status = models.CharField("Старый статус", max_length=50, blank=True, null=True)
+    new_status = models.CharField("Новый статус", max_length=50, blank=True, null=True)
+    comment = models.CharField("Комментарий", max_length=500)
+
+    class Meta:
+        abstract = True

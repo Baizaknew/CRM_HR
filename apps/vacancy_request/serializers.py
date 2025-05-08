@@ -2,8 +2,7 @@ from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
 
-from apps.vacancy_request.models import VacancyRequest
-
+from apps.vacancy_request.models import VacancyRequest, VacancyRequestChangeHistory
 
 User = get_user_model()
 
@@ -74,3 +73,11 @@ class VacancyRequestSendForRevisionSerializer(serializers.Serializer):
 
 class VacancyRequestResubmitSerializer(serializers.Serializer):
     pass
+
+
+class VacancyRequestChangeHistorySerializer(serializers.ModelSerializer):
+    user = UserSimpleSerializer(read_only=True)
+
+    class Meta:
+        model = VacancyRequestChangeHistory
+        fields = ('id', 'user', 'comment', 'created_at')
