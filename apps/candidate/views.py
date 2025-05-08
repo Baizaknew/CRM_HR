@@ -8,7 +8,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from apps.candidate.models import Candidate, CandidateApplication, CandidateNote, CandidateReference, \
     CandidateApplicationStatus, CandidateSource, CandidateTag
-from apps.candidate.permissions import IsHrLeadOrRecruiter, IsNoteOrReferenceOwner
+from apps.candidate.permissions import IsHrLeadOrRecruiter, IsNoteOrReferenceOwner, IsVacancyRecruiter
 from apps.candidate.serializers import CandidateListSerializer, CandidateUpdateCreateSerializer, \
     CandidateReferencesListDetailSerializer, CandidateNoteCreateSerializer, \
     CandidateReferenceCreateSerializer, CandidateApplicationSerializer, CandidateApplicationStatusSerializer, \
@@ -43,8 +43,13 @@ class CandidateModelViewSet(ModelViewSet):
 
 @extend_schema(tags=['candidate-applications'])
 class CandidateApplicationViewSet(ModelViewSet):
-    queryset = CandidateApplication.objects.select_related('recruiter', 'status')
+    queryset = CandidateApplication.objects.select_related('recruiter', 'status').prefetch_related('vacancy')
     permission_classes = (IsAuthenticated,)
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return IsVacancyRecruiter(),
+        return (IsAuthenticated(),)
 
     def get_queryset(self):
         if self.action == 'list':

@@ -50,3 +50,7 @@ class VacancyService:
         vacancy.closed_at = timezone.now()
         vacancy.save()
         return vacancy
+
+    @staticmethod
+    def get_vacancy_recruiter(vacancy_id: int) -> str:
+        return Vacancy.objects.get(pk=vacancy_id).recruiter

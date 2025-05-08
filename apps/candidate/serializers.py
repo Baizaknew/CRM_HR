@@ -107,6 +107,7 @@ class CandidateReferenceUpdateSerializer(serializers.ModelSerializer):
 
 class CandidateApplicationSerializer(serializers.ModelSerializer):
     recruiter = UserSimpleSerializer(read_only=True)
+    status = SimpleApplicationStatusSerializer(read_only=True)
 
     class Meta:
         model = CandidateApplication
@@ -129,7 +130,6 @@ class CandidateApplicationUpdateSerializer(serializers.ModelSerializer):
 
         if new_status and not new_status.is_rejected and rejected_reason:
             raise serializers.ValidationError({'rejected_reason': 'Причина отказа указывается только для статутов отказа'})
-        print('>>>>>>>>>>>>>>>>>>>>.', attrs)
         return attrs
 
 
