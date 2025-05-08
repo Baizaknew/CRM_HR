@@ -1,6 +1,7 @@
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
+from apps.candidate.models import CandidateApplicationStatus
 from apps.vacancy.models import VacancyStatus, Vacancy
 from apps.vacancy.serializers import VacancyCreateSerializer
 from apps.vacancy_request.models import VacancyRequest
@@ -42,3 +43,10 @@ class VacancyService:
         except ValidationError as e:
             # TODO Логирование
             return None
+
+    @staticmethod
+    def close_vacancy_as_hired(vacancy: Vacancy) -> Vacancy:
+        vacancy.status = VacancyStatus.objects.get(is_closed=True)
+        vacancy.closed_at = timezone.now()
+        vacancy.save()
+        return vacancy

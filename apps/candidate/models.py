@@ -65,6 +65,9 @@ class CandidateApplicationStatus(BaseStatusModel):
         verbose_name = "Статус кандидата в вакансии"
         verbose_name_plural = 'Статусы кандидата в вакансии'
 
+    def __str__(self):
+        return self.name
+
 
 class CandidateSource(BaseModel):
     name = models.CharField("Источник", max_length=100, help_text="Например: hh.ru, linkedin")
