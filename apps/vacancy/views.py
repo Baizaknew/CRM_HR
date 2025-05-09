@@ -1,16 +1,21 @@
 from django.utils import timezone
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from apps.candidate.models import CandidateApplicationChangeHistory
 from apps.user.choices import UserRole
-from apps.vacancy.models import Vacancy
+from apps.vacancy.models import Vacancy, VacancyChangeHistory, VacancyComment
 from apps.vacancy.permissions import IsHrLeadOrAssignedRecruiter, IsVacancyOwner
 from apps.vacancy.serializers import (VacancyListSerializerForDepartmentHead,
                                       VacancyListSerializerForHRandRecruiter,
                                       VacancyDetailSerializer,
                                       VacancyUpdateSerializerForHrLead,
-                                      VacancyUpdateSerializerForRecruiter)
+                                      VacancyUpdateSerializerForRecruiter, VacancyChangeHistorySerializer,
+                                      VacancyCommentCreateSerializer, VacancyCommentSerializer)
 from apps.vacancy.services import VacancyService
 from apps.vacancy_request.permissions import IsHrLead
 
@@ -73,3 +78,36 @@ class VacancyModelViewSet(ModelViewSet):
                     save_kwargs['opened_at'] = timezone.now()
 
         super().perform_update(serializer)
+
+    @action(detail=True, methods=['get'], url_path='activity-log')
+    def activity_log(self, request, pk=None):
+        instance = self.get_object()
+
+        histories = CandidateApplicationChangeHistory.objects.filter(application__vacancy=instance).order_by('-created_at')
+
+        serializer = VacancyChangeHistorySerializer(histories, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+@extend_schema(tags=['vacancy-request-comments'])
+class VacancyCommentViewSet(ModelViewSet):
+    queryset = VacancyComment.objects.all()
+    permission_classes = (IsAuthenticated, IsVacancyOwner)
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return VacancyCommentCreateSerializer
+        return VacancyCommentSerializer
+
+    def get_queryset(self):
+        if self.action == 'list':
+            vacancy_request_id = self.request.query_params.get('vacancy_id')
+            if vacancy_request_id:
+                return self.queryset.filter(vacancy_request_id=vacancy_request_id)
+        return self.queryset
+
+    @extend_schema(parameters=[
+        OpenApiParameter(name='vacancy_id', type=OpenApiTypes.INT, location=OpenApiParameter.QUERY, required=True),
+    ])
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)

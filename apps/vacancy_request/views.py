@@ -123,10 +123,16 @@ class VacancyRequestChangesHistoryListAPIView(ListAPIView):
 
     def get_queryset(self):
         if self.action == 'list':
-            vacancy_request_id = self.request.query_params.get('vacancy_request')
+            vacancy_request_id = self.request.query_params.get('vacancy_request_id')
             if vacancy_request_id:
                 return self.queryset.filter(vacancy_request_id=vacancy_request_id)
         return self.queryset
+
+    @extend_schema(parameters=[OpenApiParameter(
+        name='vacancy_request_id', type=OpenApiTypes.INT, location=OpenApiParameter.QUERY,required=True
+    ),])
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 @extend_schema(tags=['vacancy-request-comments'])
@@ -141,7 +147,7 @@ class VacancyRequestCommentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.action == 'list':
-            vacancy_request_id = self.request.query_params.get('vacancy_request')
+            vacancy_request_id = self.request.query_params.get('vacancy_request_id')
             if vacancy_request_id:
                 return self.queryset.filter(vacancy_request_id=vacancy_request_id)
         return self.queryset
