@@ -85,7 +85,9 @@ class CandidateApplicationViewSet(ModelViewSet):
             except Exception as e:
                 raise ValidationError({"detail": f"Статус кандидата обновлен, но ошибка при закрытии вакансии: {e}"})
 
-    @extend_schema(parameters=[OpenApiParameter(name='vacancy_id', type=OpenApiTypes.INT, location=OpenApiParameter.QUERY)])
+    @extend_schema(parameters=[OpenApiParameter(
+        name='vacancy_id', type=OpenApiTypes.INT, location=OpenApiParameter.QUERY, required=True
+    )])
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
@@ -146,7 +148,9 @@ class CandidateReferenceViewSet(ModelViewSet):
             return (IsNoteOrReferenceOwner(),)
         return (IsAuthenticated(),)
 
-    @extend_schema(parameters=[OpenApiParameter(name='candidate_id', type=OpenApiTypes.INT, location=OpenApiParameter.QUERY),])
+    @extend_schema(parameters=[OpenApiParameter(
+        name='candidate_id', type=OpenApiTypes.INT, location=OpenApiParameter.QUERY, required=True
+    ),])
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
@@ -175,7 +179,9 @@ class CandidateNoteViewSet(ModelViewSet):
             return (IsNoteOrReferenceOwner(),)
         return (IsAuthenticated(),)
 
-    @extend_schema(parameters=[OpenApiParameter(name='candidate_id', type=OpenApiTypes.INT, location=OpenApiParameter.QUERY),])
+    @extend_schema(parameters=[OpenApiParameter(
+        name='candidate_id', type=OpenApiTypes.INT, location=OpenApiParameter.QUERY, required=True
+    ),])
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
