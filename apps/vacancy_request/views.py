@@ -1,20 +1,22 @@
-from drf_spectacular.utils import extend_schema
-from rest_framework import status
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from rest_framework import status, viewsets
 
 from rest_framework.decorators import action
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from apps.user.choices import UserRole
 from apps.vacancy.services import VacancyService
-from apps.vacancy_request.models import VacancyRequest
+from apps.vacancy_request.models import VacancyRequest, VacancyRequestChangeHistory, VacancyRequestComment
 from apps.vacancy_request.permissions import IsHrLeadOrDepartmentHead, IsDepartmentHead, IsHrLead, IsOwner, \
     CanEditWhenNeedsRevisions, CanAdminActOnReview, CanResubmitWhenNeedsRevisions
 from apps.vacancy_request.serializers import VacancyRequestCreateSerializer, VacancyRequestListSerializer, \
     VacancyRequestDetailSerializer, VacancyRequestResubmitSerializer, VacancyRequestApproveSerializer, \
     VacancyRequestRejectSerializer, VacancyRequestRevisionSerializer, VacancyRequestSendForRevisionSerializer, \
-    VacancyRequestChangeHistorySerializer
+    VacancyRequestChangeHistorySerializer, VacancyRequestCommentCreateSerializer, VacancyRequestCommentSerializer
 from apps.vacancy_request.services import VacancyRequestService
 
 @extend_schema(tags=['vacancy-request'])
@@ -110,3 +112,42 @@ class VacancyRequestModelViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(requester=self.request.user)
+
+
+@extend_schema(tags=['vacancy-request-changes-history'])
+class VacancyRequestChangesHistoryListAPIView(ListAPIView):
+    queryset = VacancyRequestChangeHistory.objects.all()
+    serializer_class = VacancyRequestChangeHistorySerializer
+    permission_classes = (IsAuthenticated, IsHrLeadOrDepartmentHead, IsOwner)
+    http_method_names = ('get', 'delete')
+
+    def get_queryset(self):
+        if self.action == 'list':
+            vacancy_request_id = self.request.query_params.get('vacancy_request')
+            if vacancy_request_id:
+                return self.queryset.filter(vacancy_request_id=vacancy_request_id)
+        return self.queryset
+
+
+@extend_schema(tags=['vacancy-request-comments'])
+class VacancyRequestCommentViewSet(viewsets.ModelViewSet):
+    queryset = VacancyRequestComment.objects.all()
+    permission_classes = (IsAuthenticated, IsHrLeadOrDepartmentHead, IsOwner)
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return VacancyRequestCommentCreateSerializer
+        return VacancyRequestCommentSerializer
+
+    def get_queryset(self):
+        if self.action == 'list':
+            vacancy_request_id = self.request.query_params.get('vacancy_request')
+            if vacancy_request_id:
+                return self.queryset.filter(vacancy_request_id=vacancy_request_id)
+        return self.queryset
+
+    @extend_schema(parameters=[
+        OpenApiParameter(name='vacancy_request_id', type=OpenApiTypes.INT, location=OpenApiParameter.QUERY, required=True),
+    ])
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
