@@ -53,7 +53,7 @@ class CandidateApplicationViewSet(ModelViewSet):
 
     def get_queryset(self):
         if self.action == 'list':
-            vacancy_id = self.kwargs.get('vacancy_id')
+            vacancy_id = self.request.query_params.get('vacancy_id')
             if vacancy_id:
                 return self.queryset.filter(vacancy_id=vacancy_id)
         return self.queryset
@@ -138,7 +138,7 @@ class CandidateReferenceViewSet(ModelViewSet):
         return CandidateReferencesListDetailSerializer
 
     def get_queryset(self):
-        candidate_id = self.kwargs.get('candidate_id')
+        candidate_id = self.request.query_params.get('candidate_id')
         return self.queryset.filter(candidate_id=candidate_id) if candidate_id else self.queryset
 
     def get_permissions(self):
