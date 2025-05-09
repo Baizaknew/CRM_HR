@@ -64,7 +64,7 @@ class VacancyComment(BaseCommendModel):
         return self.text
 
 
-class VacancyHistoryChange(BaseHistoryChangesModel):
+class VacancyChangeHistory(BaseHistoryChangesModel):
     vacancy = models.ForeignKey(Vacancy, related_name="changes", on_delete=models.SET_NULL, blank=True, null=True)
 
     class Meta:
