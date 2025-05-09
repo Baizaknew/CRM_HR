@@ -1,14 +1,35 @@
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+
 from rest_framework.exceptions import ValidationError
 
-from apps.candidate.models import CandidateApplicationStatus
-from apps.vacancy.models import VacancyStatus, Vacancy
+from apps.vacancy.models import VacancyStatus, Vacancy, VacancyChangeHistory
 from apps.vacancy.serializers import VacancyCreateSerializer
 from apps.vacancy_request.models import VacancyRequest
 
 
+User = get_user_model()
+
+
 class VacancyService:
     """Сервис для Вакансий"""
+
+    @staticmethod
+    def log_change(vacancy: Vacancy, user: User, old_status=None, new_status=None, comment=None) -> None:
+        """Метод для записи истории изменений"""
+        if not comment:
+            if old_status and old_status != vacancy.status:
+                comment = f"Статус изменен с '{old_status}' на '{vacancy.status}'"
+            else:
+                comment = f"Обновлена заявка на подбор пользователем: {user}"
+
+        VacancyChangeHistory.objects.create(
+            vacancy=vacancy,
+            user=user,
+            old_status=old_status,
+            new_status=new_status,
+            comment=comment
+        )
 
     @staticmethod
     def get_default_status() -> VacancyStatus:

@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 
 from apps.candidate.choices import Experience, SourceType
-from apps.utils.base_models import BaseModel, BaseStatusModel
+from apps.utils.base_models import BaseModel, BaseStatusModel, BaseHistoryChangesModel
 from apps.vacancy.choices import City
 from apps.vacancy.models import Vacancy
 
@@ -156,3 +156,19 @@ class Candidate(BaseModel):
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
+
+
+class CandidateApplicationChangeHistory(BaseHistoryChangesModel):
+    application = models.ForeignKey(
+        CandidateApplication,
+        related_name="changes",
+        on_delete=models.CASCADE,
+        verbose_name="Заявка кандидата",
+    )
+
+    class Meta:
+        verbose_name = "История изменения статуса заявки"
+        verbose_name_plural = "История изменения статусов заявок"
+
+    def __str__(self):
+        return self.comment

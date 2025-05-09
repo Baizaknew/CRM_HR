@@ -14,6 +14,7 @@ from apps.candidate.serializers import CandidateListSerializer, CandidateUpdateC
     CandidateReferenceCreateSerializer, CandidateApplicationSerializer, CandidateApplicationStatusSerializer, \
     CandidateApplicationUpdateSerializer, CandidateSourceSerializer, CandidateTagSerializer, \
     CandidateReferenceUpdateSerializer, CandidateNoteUpdateSerializer, CandidateNoteListDetailSerializer, CandidateDetailSerializer
+from apps.candidate.services import CandidateApplicationLoggingService
 from apps.vacancy.services import VacancyService
 from apps.vacancy_request.permissions import IsHrLead
 
@@ -70,14 +71,30 @@ class CandidateApplicationViewSet(ModelViewSet):
         return initial_status
 
     def perform_create(self, serializer):
-        serializer.save(
+        instance = serializer.save(
             recruiter=self.request.user,
             status=self.get_initial_status(),
+        )
+        CandidateApplicationLoggingService.log_creation(
+            application=instance,
+            user=self.request.user
         )
 
     def perform_update(self, serializer):
         new_status = serializer.validated_data.get('status')
+        old_status = self.get_object().status
         updated_application = serializer.save()
+
+        if new_status and new_status != old_status:
+            comment = (f"Статус кандидата '{updated_application.candidate}' по вакансии "
+                            f"'{updated_application.vacancy.title}' изменен")
+            CandidateApplicationLoggingService.log_status_change(
+                application=updated_application,
+                user=self.request.user,
+                old_status_name=str(old_status) if old_status else "Неизвестно",
+                new_status_name=str(new_status),
+                comment=comment
+            )
 
         if new_status and new_status.is_success:
             try:

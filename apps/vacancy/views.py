@@ -11,6 +11,7 @@ from apps.vacancy.serializers import (VacancyListSerializerForDepartmentHead,
                                       VacancyDetailSerializer,
                                       VacancyUpdateSerializerForHrLead,
                                       VacancyUpdateSerializerForRecruiter)
+from apps.vacancy.services import VacancyService
 from apps.vacancy_request.permissions import IsHrLead
 
 
@@ -55,6 +56,13 @@ class VacancyModelViewSet(ModelViewSet):
         save_kwargs = {}
 
         if new_status:
+            VacancyService.log_change(
+                vacancy=instance,
+                user=self.request.user,
+                old_status=instance.status,
+                new_status=new_status,
+                comment=f"Пользователь {self.request.user} поменял статус вакансии с {instance.status} на {new_status}"
+            )
             if new_status.is_closed:
                 if not instance.status or not instance.status.is_closed:
                     instance.closed_at = timezone.now()
