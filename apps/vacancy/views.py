@@ -8,7 +8,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from apps.candidate.models import CandidateApplicationChangeHistory
 from apps.user.choices import UserRole
-from apps.vacancy.models import Vacancy, VacancyChangeHistory, VacancyComment
+from apps.vacancy.models import Vacancy, VacancyComment
 from apps.vacancy.permissions import IsHrLeadOrAssignedRecruiter, IsVacancyOwner
 from apps.vacancy.serializers import (VacancyListSerializerForDepartmentHead,
                                       VacancyListSerializerForHRandRecruiter,
