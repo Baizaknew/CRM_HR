@@ -23,7 +23,7 @@ class CandidateApplicationLoggingService:
 
     @staticmethod
     def log_creation(application: CandidateApplication, user: User):
-        comment_text = f"Кандидат '{application.candidate}' добавлен на вакансию '{application.vacancy.title}'"
+        comment_text = f"Добавлен новый кандидат {application.candidate}"
         CandidateApplicationLoggingService.log_status_change(
             application=application,
             user=user,

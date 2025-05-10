@@ -13,7 +13,8 @@ from apps.candidate.serializers import CandidateListSerializer, CandidateUpdateC
     CandidateReferencesListDetailSerializer, CandidateNoteCreateSerializer, \
     CandidateReferenceCreateSerializer, CandidateApplicationSerializer, CandidateApplicationStatusSerializer, \
     CandidateApplicationUpdateSerializer, CandidateSourceSerializer, CandidateTagSerializer, \
-    CandidateReferenceUpdateSerializer, CandidateNoteUpdateSerializer, CandidateNoteListDetailSerializer, CandidateDetailSerializer
+    CandidateReferenceUpdateSerializer, CandidateNoteUpdateSerializer, CandidateNoteListDetailSerializer, \
+    CandidateDetailSerializer, CandidateApplicationForVacancySerializer
 from apps.candidate.services import CandidateApplicationLoggingService
 from apps.vacancy.services import VacancyService
 from apps.vacancy_request.permissions import IsHrLead
@@ -29,7 +30,12 @@ class CandidateModelViewSet(ModelViewSet):
             queryset=CandidateApplication.objects.select_related('vacancy','status',).order_by('-created_at'),
         )
     )
-    permission_classes = (IsAuthenticated, IsHrLeadOrRecruiter,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_permissions(self):
+        if self.action != 'retrieve':
+            return (IsHrLeadOrRecruiter(),)
+        return (IsAuthenticated(),)
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -45,7 +51,7 @@ class CandidateModelViewSet(ModelViewSet):
 @extend_schema(tags=['candidate-applications'])
 class CandidateApplicationViewSet(ModelViewSet):
     queryset = CandidateApplication.objects.select_related('recruiter', 'status').prefetch_related('vacancy')
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, )
 
     def get_permissions(self):
         if self.action == 'create':
@@ -62,6 +68,8 @@ class CandidateApplicationViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action in ('update', 'partial_update'):
             return CandidateApplicationUpdateSerializer
+        if self.action == 'list':
+            return CandidateApplicationForVacancySerializer
         return CandidateApplicationSerializer
 
     def get_initial_status(self):
@@ -86,8 +94,7 @@ class CandidateApplicationViewSet(ModelViewSet):
         updated_application = serializer.save()
 
         if new_status and new_status != old_status:
-            comment = (f"Статус кандидата '{updated_application.candidate}' по вакансии "
-                            f"'{updated_application.vacancy.title}' изменен")
+            comment = f"Статус кандидата '{updated_application.candidate}' изменен с {old_status} на {new_status}"
             CandidateApplicationLoggingService.log_status_change(
                 application=updated_application,
                 user=self.request.user,
@@ -188,7 +195,7 @@ class CandidateNoteViewSet(ModelViewSet):
         return CandidateNoteListDetailSerializer
 
     def get_queryset(self):
-        candidate_id = self.kwargs.get('candidate_id')
+        candidate_id = self.request.query_params.get('candidate_id')
         return self.queryset.filter(candidate_id=candidate_id) if candidate_id else self.queryset
 
     def get_permissions(self):

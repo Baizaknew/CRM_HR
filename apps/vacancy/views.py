@@ -89,7 +89,7 @@ class VacancyModelViewSet(ModelViewSet):
         return Response(serializer.data)
 
 
-@extend_schema(tags=['vacancy-request-comments'])
+@extend_schema(tags=['vacancy-comments'])
 class VacancyCommentViewSet(ModelViewSet):
     queryset = VacancyComment.objects.all()
     permission_classes = (IsAuthenticated, IsVacancyOwner)
@@ -100,10 +100,12 @@ class VacancyCommentViewSet(ModelViewSet):
         return VacancyCommentSerializer
 
     def get_queryset(self):
+        print('!AAAAAaa')
         if self.action == 'list':
-            vacancy_request_id = self.request.query_params.get('vacancy_id')
-            if vacancy_request_id:
-                return self.queryset.filter(vacancy_request_id=vacancy_request_id)
+            vacancy_id = self.request.query_params.get('vacancy_id')
+            print('sad')
+            if vacancy_id:
+                return self.queryset.filter(vacancy_id=vacancy_id)
         return self.queryset
 
     @extend_schema(parameters=[
@@ -111,3 +113,8 @@ class VacancyCommentViewSet(ModelViewSet):
     ])
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(
+            user=self.request.user
+        )

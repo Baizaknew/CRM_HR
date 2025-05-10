@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 
-from rest_framework.exceptions import ValidationError
+from rest_framework.serializers import ValidationError
 
 from apps.vacancy.models import VacancyStatus, Vacancy, VacancyChangeHistory
 from apps.vacancy.serializers import VacancyCreateSerializer
@@ -74,4 +74,7 @@ class VacancyService:
 
     @staticmethod
     def get_vacancy_recruiter(vacancy_id: int) -> str:
-        return Vacancy.objects.get(pk=vacancy_id).recruiter
+        try:
+            return Vacancy.objects.get(pk=vacancy_id).recruiter
+        except Vacancy.DoesNotExist:
+            raise ValidationError("Такой вакансии не существует!")

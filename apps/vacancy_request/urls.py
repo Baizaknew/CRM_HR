@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from apps.vacancy_request.views import VacancyRequestModelViewSet, VacancyRequestChangesHistoryListAPIView, \
+from apps.vacancy_request.views import VacancyRequestModelViewSet, \
     VacancyRequestCommentViewSet
 
 router = DefaultRouter()
@@ -9,5 +9,4 @@ router.register('comments', VacancyRequestCommentViewSet, basename='vacancy-requ
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('change-history/', VacancyRequestChangesHistoryListAPIView.as_view()),
 ]

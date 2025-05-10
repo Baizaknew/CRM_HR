@@ -114,27 +114,6 @@ class VacancyRequestModelViewSet(ModelViewSet):
         serializer.save(requester=self.request.user)
 
 
-@extend_schema(tags=['vacancy-request-changes-history'])
-class VacancyRequestChangesHistoryListAPIView(ListAPIView):
-    queryset = VacancyRequestChangeHistory.objects.all()
-    serializer_class = VacancyRequestChangeHistorySerializer
-    permission_classes = (IsAuthenticated, IsHrLeadOrDepartmentHead, IsOwner)
-    http_method_names = ('get', 'delete')
-
-    def get_queryset(self):
-        if self.action == 'list':
-            vacancy_request_id = self.request.query_params.get('vacancy_request_id')
-            if vacancy_request_id:
-                return self.queryset.filter(vacancy_request_id=vacancy_request_id)
-        return self.queryset
-
-    @extend_schema(parameters=[OpenApiParameter(
-        name='vacancy_request_id', type=OpenApiTypes.INT, location=OpenApiParameter.QUERY,required=True
-    ),])
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
-
 @extend_schema(tags=['vacancy-request-comments'])
 class VacancyRequestCommentViewSet(viewsets.ModelViewSet):
     queryset = VacancyRequestComment.objects.all()

@@ -70,7 +70,11 @@ class CandidateApplicationStatus(BaseStatusModel):
 
 
 class CandidateSource(BaseModel):
-    name = models.CharField("Источник", max_length=100, help_text="Например: hh.ru, linkedin")
+    name = models.CharField(
+        "Источник", max_length=100,
+        help_text="Например: hh.ru, linkedin",
+        blank=True, null=True
+    )
 
     class Meta:
         verbose_name = "Источник"
