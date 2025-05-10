@@ -88,6 +88,12 @@ class VacancyModelViewSet(ModelViewSet):
         serializer = VacancyChangeHistorySerializer(histories, many=True, context={'request': request})
         return Response(serializer.data)
 
+    @action(detail=True, methods=['get'], url_path='changes-history')
+    def changes_history(self, request, pk=None):
+        instance = self.get_object()
+        histories = instance.changes.select_related('user')
+        serializer = VacancyChangeHistorySerializer(histories, many=True)
+        return Response(serializer.data)
 
 @extend_schema(tags=['vacancy-comments'])
 class VacancyCommentViewSet(ModelViewSet):
