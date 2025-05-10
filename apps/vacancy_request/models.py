@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 from apps.utils.base_models import BaseCommendModel, BaseHistoryChangesModel
 from apps.utils.base_models import VacancyBaseModel
@@ -28,6 +29,9 @@ class VacancyRequest(VacancyBaseModel):
 
     def __str__(self):
         return f"Заявка от {self.requester.username}"
+
+    def get_absolute_url(self):
+        return reverse('vacancy-request-detail', kwargs={'pk': self.pk})
 
 
 class VacancyRequestComment(BaseCommendModel):

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 from apps.candidate.choices import Experience, SourceType
 from apps.utils.base_models import BaseModel, BaseStatusModel, BaseHistoryChangesModel
@@ -160,6 +161,12 @@ class Candidate(BaseModel):
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
+
+    def get_absolute_url(self):
+        return reverse('candidate-profile-detail', kwargs={'pk': self.pk})
+
+    def get_full_name(self):
+        return f'{self.last_name} {self.first_name} {self.patronymic}'
 
 
 class CandidateApplicationChangeHistory(BaseHistoryChangesModel):

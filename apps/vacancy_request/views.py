@@ -1,16 +1,18 @@
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
+from django.contrib.auth import get_user_model
+
 from rest_framework import status, viewsets
 
 from rest_framework.decorators import action
-from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from apps.user.choices import UserRole
+from apps.utils.tasks import send_email_notification, send_telegram_notification
 from apps.vacancy.services import VacancyService
-from apps.vacancy_request.models import VacancyRequest, VacancyRequestChangeHistory, VacancyRequestComment
+from apps.vacancy_request.models import VacancyRequest, VacancyRequestComment
 from apps.vacancy_request.permissions import IsHrLeadOrDepartmentHead, IsDepartmentHead, IsHrLead, IsOwner, \
     CanEditWhenNeedsRevisions, CanAdminActOnReview, CanResubmitWhenNeedsRevisions
 from apps.vacancy_request.serializers import VacancyRequestCreateSerializer, VacancyRequestListSerializer, \
@@ -18,6 +20,10 @@ from apps.vacancy_request.serializers import VacancyRequestCreateSerializer, Vac
     VacancyRequestRejectSerializer, VacancyRequestRevisionSerializer, VacancyRequestSendForRevisionSerializer, \
     VacancyRequestChangeHistorySerializer, VacancyRequestCommentCreateSerializer, VacancyRequestCommentSerializer
 from apps.vacancy_request.services import VacancyRequestService
+
+
+User = get_user_model()
+
 
 @extend_schema(tags=['vacancy-request'])
 class VacancyRequestModelViewSet(ModelViewSet):
@@ -111,7 +117,16 @@ class VacancyRequestModelViewSet(ModelViewSet):
         return Response(serializer.data)
 
     def perform_create(self, serializer):
-        serializer.save(requester=self.request.user)
+        instance = serializer.save(requester=self.request.user)
+        send_email_notification(
+            "Новая заявка на подбор",
+            [user.email for user in User.objects.filter(role=UserRole.HR_LEAD)],
+            {"manager_name": self.request.user.username, "vacancy_request_url": instance.get_absolute_url()},
+            "creating_vacancy_request.html"
+        ).delay()
+        send_telegram_notification(
+            f"Новая заявка на подбор от руководителя {self.request.user.username}",
+        ).delay()
 
 
 @extend_schema(tags=['vacancy-request-comments'])

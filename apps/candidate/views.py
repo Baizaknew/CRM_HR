@@ -16,6 +16,7 @@ from apps.candidate.serializers import CandidateListSerializer, CandidateUpdateC
     CandidateReferenceUpdateSerializer, CandidateNoteUpdateSerializer, CandidateNoteListDetailSerializer, \
     CandidateDetailSerializer, CandidateApplicationForVacancySerializer
 from apps.candidate.services import CandidateApplicationLoggingService
+from apps.utils.tasks import send_email_notification
 from apps.vacancy.services import VacancyService
 from apps.vacancy_request.permissions import IsHrLead
 
@@ -87,6 +88,13 @@ class CandidateApplicationViewSet(ModelViewSet):
             application=instance,
             user=self.request.user
         )
+        send_email_notification(
+            "Новый кандидат",
+            [instance.vacancy.department_lead.email],
+            {"vacancy_name": instance.vacancy.title, "candidate_name": instance.candidate.get_full_name(),
+                    "candidate_url": instance.candidate.get_absolute_url()},
+            "added_new_candidate.html",
+        )
 
     def perform_update(self, serializer):
         new_status = serializer.validated_data.get('status')
@@ -101,6 +109,17 @@ class CandidateApplicationViewSet(ModelViewSet):
                 old_status_name=str(old_status) if old_status else "Неизвестно",
                 new_status_name=str(new_status),
                 comment=comment
+            )
+            user_emails = [updated_application.vacancy.recruiter.email
+                           if updated_application.vacancy.department_lead == self.request.user else
+                           updated_application.vacancy.department_lead.email]
+            send_email_notification(
+                "Новый кандидат",
+                user_emails,
+                {"vacancy_name": updated_application.vacancy.title,
+                        "candidate_name": updated_application.candidate.get_full_name(),
+                        "candidate_url": updated_application.candidate.get_absolute_url()},
+                "changed_candidate_application_status.html",
             )
 
         if new_status and new_status.is_success:
