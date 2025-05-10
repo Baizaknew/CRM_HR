@@ -6,3 +6,5 @@ django-ckeditor==6.6.1
 djangorestframework==3.16.0
 djangorestframework_simplejwt==5.5.0
 drf-spectacular==0.28.0
+celery==5.4.0
+
