@@ -5,7 +5,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from apps.user.serializers import UserSerializer
 from apps.vacancy_request.permissions import IsHrLead
-from apps.user.permissoins import IsUser
+from apps.user.permissoins import IsUserOrHrLead
 
 User = get_user_model()
 
@@ -17,8 +17,8 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def get_permissions(self):
-        if self.action in ('create', 'delete', 'update', 'partial_update'):
+        if self.action in ('create', 'delete'):
             return (IsHrLead(),)
         elif self.action in ('update', 'partial_update'):
-            return (IsUser(),)
+            return (IsUserOrHrLead(),)
         return (IsAuthenticated(),)
