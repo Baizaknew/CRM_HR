@@ -162,7 +162,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer',
 }
 
-FRONTEND_BASE_URL = os.getenv("FRONTEND_URL", "")
+FRONTEND_BASE_URL = os.getenv("FRONTEND_BASE_URL", "")
 
 # Redis settings
 REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
