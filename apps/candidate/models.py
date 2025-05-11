@@ -76,7 +76,7 @@ class CandidateSource(BaseModel):
     name = models.CharField(
         "Источник", max_length=100,
         help_text="Например: hh.ru, linkedin",
-        blank=True, null=True
+        blank=True, null=True, unique=True
     )
 
     class Meta:
