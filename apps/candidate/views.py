@@ -159,9 +159,9 @@ class CandidateSourceViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
     def get_permissions(self):
-        if self.action in ('create', 'update', 'partial_update', 'delete'):
-            return (IsHrLead(),)
-        return (IsAuthenticated(),)
+        if self.action == 'list':
+            return (IsAuthenticated(),)
+        return (IsHrLead(),)
 
 
 @extend_schema(tags=['candidate-tags'])
@@ -171,9 +171,9 @@ class CandidateTagViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
     def get_permissions(self):
-        if self.action in ('create', 'update', 'partial_update', 'delete'):
-            return (IsHrLead(),)
-        return (IsAuthenticated(),)
+        if self.action == 'list':
+            return (IsAuthenticated(),)
+        return (IsHrLead(),)
 
 
 @extend_schema(tags=['candidate-references'])

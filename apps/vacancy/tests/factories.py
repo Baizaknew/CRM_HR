@@ -2,7 +2,6 @@ import factory
 
 from factory.django import DjangoModelFactory
 
-from apps.user.tests.factories import DepartmentHeadFactory, RecruiterFactory
 from apps.vacancy.choices import Department, City, Priority
 from apps.vacancy.models import Vacancy, VacancyStatus
 from apps.vacancy_request.tests.factories import VacancyRequestFactory

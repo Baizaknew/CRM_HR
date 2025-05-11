@@ -13,7 +13,7 @@ User = get_user_model()
 
 
 class CandidateTag(BaseModel):
-    title = models.CharField("Название", max_length=100)
+    title = models.CharField("Название", max_length=100, unique=True)
 
     class Meta:
         verbose_name = "Тег"
