@@ -88,7 +88,7 @@ class CandidateApplicationViewSet(ModelViewSet):
             application=instance,
             user=self.request.user
         )
-        send_email_notification(
+        send_email_notification.delay(
             "Новый кандидат",
             [instance.vacancy.department_lead.email],
             {"vacancy_name": instance.vacancy.title, "candidate_name": instance.candidate.get_full_name(),
@@ -113,7 +113,7 @@ class CandidateApplicationViewSet(ModelViewSet):
             user_emails = [updated_application.vacancy.recruiter.email
                            if updated_application.vacancy.department_lead == self.request.user else
                            updated_application.vacancy.department_lead.email]
-            send_email_notification(
+            send_email_notification.delay(
                 "Смена статуса кандидата",
                 user_emails,
                 {"vacancy_name": updated_application.vacancy.title,

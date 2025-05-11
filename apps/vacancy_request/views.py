@@ -118,15 +118,15 @@ class VacancyRequestModelViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         instance = serializer.save(requester=self.request.user)
-        send_email_notification(
+        send_email_notification.delay(
             "Новая заявка на подбор",
             [user.email for user in User.objects.filter(role=UserRole.HR_LEAD)],
             {"manager_name": self.request.user.username, "vacancy_request_url": instance.get_absolute_url()},
             "creating_vacancy_request.html"
-        ).delay()
-        send_telegram_notification(
+        )
+        send_telegram_notification.delay(
             f"Новая заявка на подбор от руководителя {self.request.user.username}",
-        ).delay()
+        )
 
 
 @extend_schema(tags=['vacancy-request-comments'])

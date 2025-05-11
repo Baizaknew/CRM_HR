@@ -19,7 +19,7 @@ def send_email_notification(subject: str, users_emails: [str], context: dict, te
         subject=subject,
         body=text_template,
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[users_emails],
+        to=users_emails,
     )
 
     email.attach_alternative(html_template, "text/html")
