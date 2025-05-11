@@ -1,11 +1,25 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth import get_user_model
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
+from apps.user.models import User
 
 
-User = get_user_model()
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'role')
-    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups', 'role')
+class CustomUserAdmin(UserAdmin):
+    search_fields = ('username',)
+
+    fieldsets = (
+        (None, {'fields': ('username', 'email', 'password')}),
+        ('Permissions', {'fields': ('is_staff', 'is_superuser', 'is_active', 'groups', 'user_permissions')}),
+        ('Custom Fields', {'fields': ('role',)}),
+    )
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'role', 'password1', 'password2'),
+        }),
+    )
+
+
+admin.site.register(User, CustomUserAdmin)
