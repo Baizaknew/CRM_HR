@@ -114,7 +114,7 @@ class CandidateApplicationViewSet(ModelViewSet):
                            if updated_application.vacancy.department_lead == self.request.user else
                            updated_application.vacancy.department_lead.email]
             send_email_notification(
-                "Новый кандидат",
+                "Смена статуса кандидата",
                 user_emails,
                 {"vacancy_name": updated_application.vacancy.title,
                         "candidate_name": updated_application.candidate.get_full_name(),
