@@ -33,7 +33,7 @@ class VacancyRequest(VacancyBaseModel):
         return f"Заявка от {self.requester.username}"
 
     def get_absolute_url(self):
-        return f"{settings.FRONTEND_BASE_URL}/{reverse('vacancy-request-detail', kwargs={'pk': self.pk})}"
+        return f"{settings.FRONTEND_BASE_URL}{reverse('vacancy-request-detail', kwargs={'pk': self.pk})}"
 
 
 class VacancyRequestComment(BaseCommendModel):

@@ -165,7 +165,7 @@ class Candidate(BaseModel):
         return f'{self.first_name} {self.last_name}'
 
     def get_absolute_url(self):
-        return f"{settings.FRONTEND_BASE_URL}/{reverse('candidate-profile-detail', kwargs={'pk': self.pk})}"
+        return f"{settings.FRONTEND_BASE_URL}{reverse('candidate-profile-detail', kwargs={'pk': self.pk})}"
 
     def get_full_name(self):
         return f'{self.last_name} {self.first_name} {self.patronymic}'
