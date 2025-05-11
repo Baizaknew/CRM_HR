@@ -1,5 +1,7 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
+from unittest.mock import patch
+
 
 from django.urls import reverse
 
@@ -79,7 +81,10 @@ class VacancyRequestAPITests(APITestCase):
                 response = self.client.post(self.list_create_url, data=data)
                 self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_create_success_by_department_head(self):
+
+    @patch('apps.utils.tasks.send_email_notification.delay')
+    @patch('apps.utils.tasks.send_telegram_notification.delay')
+    def test_create_success_by_department_head(self, mock1, mock2):
         self.client.force_authenticate(self.dh_1)
         initial_count = VacancyRequest.objects.count()
         data = {
