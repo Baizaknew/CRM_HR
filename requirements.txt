@@ -10,3 +10,4 @@ drf-spectacular==0.28.0
 celery==5.4.0
 requests==2.32.3
 redis==3.5.3
+factory_boy==3.3.3
