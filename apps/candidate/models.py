@@ -1,11 +1,13 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.conf import settings
 
 from apps.candidate.choices import Experience, SourceType
 from apps.utils.base_models import BaseModel, BaseStatusModel, BaseHistoryChangesModel
 from apps.vacancy.choices import City
 from apps.vacancy.models import Vacancy
+
 
 User = get_user_model()
 
@@ -163,7 +165,7 @@ class Candidate(BaseModel):
         return f'{self.first_name} {self.last_name}'
 
     def get_absolute_url(self):
-        return reverse('candidate-profile-detail', kwargs={'pk': self.pk})
+        return f"{settings.FRONTEND_BASE_URL}/{reverse('candidate-profile-detail', kwargs={'pk': self.pk})}"
 
     def get_full_name(self):
         return f'{self.last_name} {self.first_name} {self.patronymic}'

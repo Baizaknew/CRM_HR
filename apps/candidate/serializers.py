@@ -39,8 +39,7 @@ class CandidateForApplicationCardSerializer(serializers.ModelSerializer):
         fields = ('id', 'full_name', 'salary_expectation', 'resume')
 
     def get_full_name(self, obj) -> str:
-        parts = [obj.last_name, obj.first_name, obj.patronymic]
-        return " ".join(filter(None, parts))
+        return obj.get_full_name()
 
 
 class BriefCandidateApplicationSerializer(serializers.ModelSerializer):
@@ -61,9 +60,7 @@ class CandidateListSerializer(serializers.ModelSerializer):
         fields = ('id', 'full_name', 'applications', 'created_at', 'source_type')
 
     def get_full_name(self, obj) -> str:
-        parts = [obj.last_name, obj.first_name, obj.patronymic]
-        return " ".join(filter(None, parts))
-
+        return obj.get_full_name()
 
 class CandidateNoteListDetailSerializer(serializers.ModelSerializer):
     added_by = UserSimpleSerializer(read_only=True)

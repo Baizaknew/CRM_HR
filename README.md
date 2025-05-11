@@ -83,12 +83,13 @@ Environment variables are used to configure the application. You need to create 
 | `DB_PORT`               | Database port                                | 5432                                 |
 | `REDIS_HOST`            | Redis server host                            | localhost                            |
 | `REDIS_PORT`            | Redis port                                   | 6379                                 |
-| `EMAIL_HOST`            | SMTP server                                  | smtp.gmail.com                        |
+| `EMAIL_HOST`            | SMTP server                                  | smtp.gmail.com                       |
 | `EMAIL_HOST_USER`       | Sender email address                         | example@gmail.com                    |
 | `EMAIL_HOST_PASSWORD`   | Email password or app password               | your-email-password                  |
 | `EMAIL_PORT`            | SMTP port                                    | 587                                  |
 | `TELEGRAM_BOT_TOKEN`    | Telegram bot API token                       | your-bot-token                       |
 | `TELEGRAM_HR_CHAT_ID`   | Telegram HR chat ID                          | your-chat-id                         |
+| `FRONTEND_BASE_URL`     | Frontend base url for link in email message  | http://crm-hr.com                    |
 
 ---
 

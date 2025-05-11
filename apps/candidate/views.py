@@ -1,10 +1,13 @@
 from django.db.models import Prefetch
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 from rest_framework.serializers import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
+from rest_framework import filters
 
 from apps.candidate.models import Candidate, CandidateApplication, CandidateNote, CandidateReference, \
     CandidateApplicationStatus, CandidateSource, CandidateTag
@@ -32,6 +35,9 @@ class CandidateModelViewSet(ModelViewSet):
         )
     )
     permission_classes = (IsAuthenticated,)
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['vacancy', 'city', 'experience', 'source', 'source_type']
+    search_fields = ['first_name', 'last_name', 'patronymic']
 
     def get_permissions(self):
         if self.action != 'retrieve':

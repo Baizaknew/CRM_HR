@@ -1,13 +1,13 @@
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
+from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
 
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, filters
 
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 
 from apps.user.choices import UserRole
 from apps.utils.tasks import send_email_notification, send_telegram_notification
@@ -26,7 +26,7 @@ User = get_user_model()
 
 
 @extend_schema(tags=['vacancy-request'])
-class VacancyRequestModelViewSet(ModelViewSet):
+class VacancyRequestModelViewSet(viewsets.ModelViewSet):
     queryset = VacancyRequest.objects.select_related('requester', 'approver').all()
     serializer_map = {
         'create': VacancyRequestCreateSerializer,
@@ -41,6 +41,9 @@ class VacancyRequestModelViewSet(ModelViewSet):
         'partial_update': VacancyRequestRevisionSerializer,
         'changes_history': VacancyRequestChangeHistorySerializer,
     }
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['requester', 'status', 'department', 'city']
+    search_fields = ['title']
 
     def get_queryset(self):
         if self.request.user.role == UserRole.HR_LEAD:

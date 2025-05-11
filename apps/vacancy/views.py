@@ -5,6 +5,9 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 from apps.candidate.models import CandidateApplicationChangeHistory
 from apps.user.choices import UserRole
@@ -23,6 +26,9 @@ from apps.vacancy_request.permissions import IsHrLead
 @extend_schema(tags=['vacancy'])
 class VacancyModelViewSet(ModelViewSet):
     queryset = Vacancy.objects.select_related("department_lead", "status", "recruiter")
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['recruiter', 'priority', 'status', 'department_lead', 'city', 'department']
+    search_fields = ['title', 'requirements']
 
     def get_queryset(self):
         if not self.request.user.is_authenticated:
