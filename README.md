@@ -71,6 +71,7 @@
 
 Environment variables are used to configure the application. You need to create a `.env` file in the project's root directory (next to `manage.py`). You can copy `env_template` (if it exists) or create the file from scratch using the variables listed below.
 
+| Variable                | Description                                  | Example                              |
 |-------------------------|----------------------------------------------|--------------------------------------|
 | `SECRET_KEY`            | Django secret key                            | your-secret-key                      |
 | `DEBUG`                 | Debug mode (True/False)                      | True                                 |
@@ -82,14 +83,14 @@ Environment variables are used to configure the application. You need to create 
 | `DB_PORT`               | Database port                                | 5432                                 |
 | `REDIS_HOST`            | Redis server host                            | localhost                            |
 | `REDIS_PORT`            | Redis port                                   | 6379                                 |
-| `EMAIL_HOST`            | SMTP server                                  | smtp.gmail.com                       |
+| `EMAIL_HOST`            | SMTP server                                  | smtp.gmail.com                        |
 | `EMAIL_HOST_USER`       | Sender email address                         | example@gmail.com                    |
 | `EMAIL_HOST_PASSWORD`   | Email password or app password               | your-email-password                  |
 | `EMAIL_PORT`            | SMTP port                                    | 587                                  |
 | `TELEGRAM_BOT_TOKEN`    | Telegram bot API token                       | your-bot-token                       |
 | `TELEGRAM_HR_CHAT_ID`   | Telegram HR chat ID                          | your-chat-id                         |
 
--------------------------------------------------------------------------------------------------------------------
+---
 
 ## API Documentation
 
