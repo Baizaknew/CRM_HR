@@ -67,6 +67,12 @@
         python manage.py runserver
         ```
 
+    *   Make sure that the redis server is running
+    *   Running celery
+        ```
+        celery -A core worker -l INFO
+        ```
+
 ## Environment Variables
 
 Environment variables are used to configure the application. You need to create a `.env` file in the project's root directory (next to `manage.py`). You can copy `env_template` (if it exists) or create the file from scratch using the variables listed below.
