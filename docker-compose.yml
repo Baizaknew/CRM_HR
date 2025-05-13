@@ -1,0 +1,71 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+      - static_volume:/app/static
+      - media_volume:/app/media
+    expose:
+      - 8000
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+      - redis
+    restart: always
+    entrypoint: ["/entrypoint.sh"]
+
+  celery:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+    command: celery -A core worker -l INFO
+    volumes:
+      - ./backend:/app
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+      - redis
+    restart: always
+
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./backend/.env
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    restart: always
+
+  nginx:
+    image: nginx:1.23-alpine
+    volumes:
+      - ./deploy/nginx:/etc/nginx/conf.d
+      - static_volume:/home/app/web/static
+      - media_volume:/home/app/web/media
+      - ./ssl:/etc/nginx/ssl
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - web
+    restart: always
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_volume:
+  media_volume:
