@@ -183,3 +183,5 @@ EMAIL_USE_TLS = True
 # Telegram settings
 TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
 TELEGRAM_HR_CHAT_ID = os.environ.get('TELEGRAM_HR_CHAT_ID', '')
+
+CSRF_TRUSTED_ORIGINS = ["https://crm-hr"]

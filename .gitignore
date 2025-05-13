@@ -684,3 +684,5 @@ media
 .flake8
 /logs/*
 /media/
+./ssl
+/ssl
