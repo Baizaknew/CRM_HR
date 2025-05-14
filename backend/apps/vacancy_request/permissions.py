@@ -45,3 +45,9 @@ class CanAdminActOnReview(BasePermission):
     message = "Разрешено если статус Заявки - 'На рассмотрении'"
     def has_object_permission(self, request, view, obj):
         return obj.status == VacancyRequestStatus.IN_REVIEW
+
+
+class IsCommentOwner(BasePermission):
+    """Доступ для изменения и удаления только для владельца комментария"""
+    def has_object_permission(self, request, view, obj):
+        return request.user.is_authenticated and obj.user == request.user

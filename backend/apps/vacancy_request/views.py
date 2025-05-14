@@ -13,7 +13,7 @@ from apps.user.choices import UserRole
 from apps.utils.tasks import send_email_notification, send_telegram_notification
 from apps.vacancy.services import VacancyService
 from apps.vacancy_request.models import VacancyRequest, VacancyRequestComment
-from apps.vacancy_request.permissions import IsHrLeadOrDepartmentHead, IsDepartmentHead, IsHrLead, IsOwner, \
+from apps.vacancy_request.permissions import IsCommentOwner, IsHrLeadOrDepartmentHead, IsDepartmentHead, IsHrLead, IsOwner, \
     CanEditWhenNeedsRevisions, CanAdminActOnReview, CanResubmitWhenNeedsRevisions
 from apps.vacancy_request.serializers import VacancyRequestCreateSerializer, VacancyRequestListSerializer, \
     VacancyRequestDetailSerializer, VacancyRequestResubmitSerializer, VacancyRequestApproveSerializer, \
@@ -135,7 +135,7 @@ class VacancyRequestModelViewSet(viewsets.ModelViewSet):
 @extend_schema(tags=['vacancy-request-comments'])
 class VacancyRequestCommentViewSet(viewsets.ModelViewSet):
     queryset = VacancyRequestComment.objects.all()
-    permission_classes = (IsAuthenticated, IsHrLeadOrDepartmentHead, IsOwner)
+    permission_classes = (IsAuthenticated, IsHrLeadOrDepartmentHead, IsCommentOwner)
 
     def get_serializer_class(self):
         if self.action == 'create':
