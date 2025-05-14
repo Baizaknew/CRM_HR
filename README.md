@@ -104,8 +104,8 @@ Environment variables are used to configure the application. You need to create 
 
 API documentation is automatically generated using Swagger UI / Redoc (if configured in DRF). Available URLs (may differ depending on `urls.py` settings):
 
-*   **Swagger UI:** `https://crm-hr/api/swagger/`
-*   **Redoc:** `https://crm-hr/api/schema/redoc/`
-*   **Admin Panel:** `https://crm-hr/admin`
+*   **Swagger UI:** `https://crm-hr.site/api/swagger/`
+*   **Redoc:** `https://crm-hr.site/api/schema/redoc/`
+*   **Admin Panel:** `https://crm-hr.site/admin`
 
 The documentation describes all available endpoints, required parameters, request and response formats, as well as access rights for each action.
