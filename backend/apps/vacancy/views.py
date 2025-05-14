@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+from apps.utils.tasks import send_email_notification
+
 
 
 from apps.candidate.models import CandidateApplicationChangeHistory
@@ -63,6 +65,8 @@ class VacancyModelViewSet(ModelViewSet):
         instance = serializer.instance
         validated_data = serializer.validated_data
         new_status = validated_data.get('status')
+        old_recruiter = instance.recruiter
+        new_recruiter = validated_data.get('recruiter', old_recruiter)
 
         save_kwargs = {}
 
@@ -82,6 +86,15 @@ class VacancyModelViewSet(ModelViewSet):
                 if not instance.status or not instance.status.is_opened:
                     instance.opened_at = timezone.now()
                     save_kwargs['opened_at'] = timezone.now()
+
+        if old_recruiter != new_recruiter:
+                print('!!!!!!!!!!!!!!!!')
+                send_email_notification.delay(
+                    "Назначение на вакансию",
+                    [new_recruiter.email, instance.department_lead.email],
+                    {"position_name": instance.title, "recruiter_name": instance.recruiter.username, "vacancy_url": instance.get_absolute_url()},
+                    "assigment_recruiter.html",
+                )
 
         super().perform_update(serializer)
 

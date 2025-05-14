@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.conf import settings
+from django.urls import reverse
 
 
 from apps.utils.base_models import BaseModel, BaseCommendModel, VacancyBaseModel, BaseStatusModel, \
@@ -50,6 +52,9 @@ class Vacancy(VacancyBaseModel):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return f"{settings.FRONTEND_BASE_URL}{reverse('vacancy-detail', kwargs={'pk': self.pk})}"
 
 
 class VacancyComment(BaseCommendModel):
