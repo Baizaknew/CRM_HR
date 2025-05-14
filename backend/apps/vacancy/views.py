@@ -13,11 +13,11 @@ from apps.utils.tasks import send_email_notification
 
 from apps.candidate.models import CandidateApplicationChangeHistory
 from apps.user.choices import UserRole
-from apps.vacancy.models import Vacancy, VacancyComment
+from apps.vacancy.models import Vacancy, VacancyComment, VacancyStatus
 from apps.vacancy.permissions import IsHrLeadOrAssignedRecruiter, IsVacancyOwner
 from apps.vacancy.serializers import (VacancyListSerializerForDepartmentHead,
                                       VacancyListSerializerForHRandRecruiter,
-                                      VacancyDetailSerializer,
+                                      VacancyDetailSerializer, VacancyStatusSerializer,
                                       VacancyUpdateSerializerForHrLead,
                                       VacancyUpdateSerializerForRecruiter, VacancyChangeHistorySerializer,
                                       VacancyCommentCreateSerializer, VacancyCommentSerializer)
@@ -88,11 +88,10 @@ class VacancyModelViewSet(ModelViewSet):
                     save_kwargs['opened_at'] = timezone.now()
 
         if old_recruiter != new_recruiter:
-                print('!!!!!!!!!!!!!!!!')
                 send_email_notification.delay(
                     "Назначение на вакансию",
                     [new_recruiter.email, instance.department_lead.email],
-                    {"position_name": instance.title, "recruiter_name": instance.recruiter.username, "vacancy_url": instance.get_absolute_url()},
+                    {"position_name": instance.title, "recruiter_name": new_recruiter.username, "vacancy_url": instance.get_absolute_url()},
                     "assigment_recruiter.html",
                 )
 
@@ -143,3 +142,14 @@ class VacancyCommentViewSet(ModelViewSet):
         serializer.save(
             user=self.request.user
         )
+
+
+class VacancyStatusViewSet(ModelViewSet):
+    queryset = VacancyStatus.objects.all()
+    permission_classes = (IsAuthenticated)
+    serializer_class = VacancyStatusSerializer
+
+    def get_permissions(self):
+        if self.action in ('update', 'delete', 'partial_update', 'create'):
+            return IsHrLead(),
+        return IsAuthenticated(),
