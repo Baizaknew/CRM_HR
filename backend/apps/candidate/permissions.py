@@ -16,4 +16,4 @@ class IsNoteOrReferenceOwner(BasePermission):
 
 class IsVacancyRecruiter(BasePermission):
     def has_permission(self, request, view):
-        return VacancyService.get_vacancy_recruiter(request.data.get('vacancy')) == request.user
+        return VacancyService.get_vacancy_recruiter(request.data.get('vacancy')) == request.user or request.user.role == UserRole.HR_LEAD

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.vacancy.models import Vacancy, VacancyChangeHistory, VacancyComment
+from apps.vacancy.models import Vacancy, VacancyChangeHistory, VacancyComment, VacancyStatus
 from apps.vacancy_request.serializers import UserSimpleSerializer
 
 
@@ -82,3 +82,10 @@ class VacancyCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = VacancyComment
         fields = ('id', 'text', 'user', 'created_at')
+
+
+class VacancyStatusSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = VacancyStatus
+        fields = "__all__"
