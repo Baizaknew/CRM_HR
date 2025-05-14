@@ -24,6 +24,7 @@
     ```bash
     git clone https://github.com/Baizaknew/CRM_HR.git
     cd CRM_HR
+    cd backend
     ```
 
 2.  **Set up a virtual environment and install dependencies:**
