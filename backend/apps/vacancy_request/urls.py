@@ -4,8 +4,8 @@ from apps.vacancy_request.views import VacancyRequestModelViewSet, \
     VacancyRequestCommentViewSet
 
 router = DefaultRouter()
-router.register(r'', VacancyRequestModelViewSet, basename='vacancy-request')
 router.register('comments', VacancyRequestCommentViewSet, basename='vacancy-request-comments')
+router.register(r'', VacancyRequestModelViewSet, basename='vacancy-request')
 
 urlpatterns = [
     path('', include(router.urls)),
