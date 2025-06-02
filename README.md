@@ -4,19 +4,14 @@
 
 ## Technology Stack
 
-*   Python 3.10
-*   Django 4.2
-*   Django REST Framework
-*   PostgreSQL
-*   Docker(optional)
+* Programming language: Python 3.10+
+* Backend: Django 4.2+ , Django REST Framework  
+* Database: PostgreSQL 16+
+* Task Queue: Celery, Redis 5+  
+* Containerization: Docker 23+ , Docker Compose  
+* Deployment: Google Cloud Platform (VM), Nginx, Gunicorn  
+* Version Control: Git, GitHub  
 
-
-## Requirements
-
-*   Python 3.10+
-*   PostgreSQL 16.4+ (or other configured DB)
-*   (Optional) Docker and Docker Compose
-*   Redis 5+
 
 ## Installation
 
@@ -96,7 +91,7 @@ Environment variables are used to configure the application. You need to create 
 | `EMAIL_PORT`            | SMTP port                                    | 587                                  |
 | `TELEGRAM_BOT_TOKEN`    | Telegram bot API token                       | your-bot-token                       |
 | `TELEGRAM_HR_CHAT_ID`   | Telegram HR chat ID                          | your-chat-id                         |
-| `FRONTEND_BASE_URL`     | Frontend base url for link in email message  | http://crm-hr.com                    |
+| `FRONTEND_BASE_URL`     | Frontend base url for link in email message  | http://crm-hr.site                   |
 
 ---
 
