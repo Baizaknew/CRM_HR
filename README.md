@@ -1,6 +1,20 @@
+<h1 align="center">Hi there, I'm Baizak 
+<img src="https://github.com/blackcater/blackcater/raw/main/images/Hi.gif" height="32"/></h1>
+
 # Development of a CRM system for automating and improving the efficiency of recruitment
 
 **Development of a CRM system for automating and improving the efficiency of recruitment** - a project that is designed to automate, simplify, and accelerate employee recruitment. The users are HR managers, recruiters, department heads
+
+## 🚀 Key Features
+
+| Feature               | Description |
+|------------------------|-------------|
+| 📝 **Job Requests**       | Submit structured vacancy requests with fields like department, position, and urgency. |
+| 🧑‍💼 **Role-Based Access** | Different roles (HR, Recruiter, Manager) see only what they need — nothing more.|
+| 👥 **Candidate Tracking** | Full pipeline with custom statuses: *screening → tech interview → HR interview → offer → accepted.* (you can update and add more if you wish) |
+| 🗂 **Vacancy Management** | Track and update job openings with statuses like: *taken into work, under consideration, closed.* (you can update and add more if you wish) |
+| 🌐 **Source Tracking**    | Track where candidates came from: *LinkedIn, Telegram, job boards, recommendations.. and others* |
+| 📎 **File Attachments**   | Store CVs, cover letters, documents per candidate |   
 
 ## Technology Stack
 
@@ -104,3 +118,10 @@ API documentation is automatically generated using Swagger UI / Redoc (if config
 *   **Admin Panel:** `https://crm-hr.site/admin`
 
 The documentation describes all available endpoints, required parameters, request and response formats, as well as access rights for each action.
+
+## 📫 Contact
+
+Created by **Baizak Zhumaev**  
+If you have any questions — feel free to reach out:
+
+📧 [baizak.zhumaev@alatoo.edu.kg](mailto:baizak.zhumaev@alatoo.edu.kg)
