@@ -26,6 +26,14 @@
 * Deployment: Google Cloud Platform (VM), Nginx, Gunicorn  
 * Version Control: Git, GitHub  
 
+## 🧱 System Architecture
+![image](https://github.com/user-attachments/assets/55596bea-ebaa-4c72-a64d-2366484c2df2)
+
+## 🗄️ Database Diagram
+The database is designed using relational principles and normalized structure.  
+
+![image](https://github.com/user-attachments/assets/2ef96726-586b-4523-84ae-b8ce841296ec)
+🔗 [Click here to view full interactive ERD](https://dbdiagram.io/d/crm_db_diagram-67f780f34f7afba18411b5f4)
 
 ## Installation
 
@@ -118,6 +126,29 @@ API documentation is automatically generated using Swagger UI / Redoc (if config
 *   **Admin Panel:** `https://crm-hr.site/admin`
 
 The documentation describes all available endpoints, required parameters, request and response formats, as well as access rights for each action.
+
+## 🎨 UI Prototype (Frontend Preview)
+
+Although the current system is backend-focused, here are mockups of how the frontend interface could look in the future.
+
+![image](https://github.com/user-attachments/assets/ef621c29-fe75-4e6d-9d26-109a3ae6c863)
+![image](https://github.com/user-attachments/assets/4ab47bdf-6afd-4bcf-adc0-56798c93f203)
+![image](https://github.com/user-attachments/assets/cd3b695c-a1ad-4472-91ce-09eec03d7631)
+![image](https://github.com/user-attachments/assets/7530f029-532f-497e-8762-12cc62c3e2fa)
+![image](https://github.com/user-attachments/assets/877b89e3-1c8d-443c-8196-46494016eaa4)
+
+
+## 🔮 Future Plans
+
+| Feature                 | Description                                      |
+|-------------------------|--------------------------------------------------|
+| 🤖 AI Integration       | Implement AI models to automatically screen and rank candidates based on CV data, job requirements, and historical feedback. |
+| 🌐 React Frontend       | Full user interface for HR teams                |
+| 🔄 CI/CD Pipeline       | Auto-deploy with GitHub Actions or Gitlab CI    |
+| 📈 Analytics Dashboard  | Track HR performance and conversion rates       |
+| 📱 Mobile Version       | Lightweight mobile interface                    |
+| 🧩 1C / ERP Integration | Connect the system to enterprise tools like 1C for contract processing and onboarding|
+
 
 ## 📫 Contact
 
