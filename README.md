@@ -3,7 +3,14 @@
 
 # Development of a CRM system for automating and improving the efficiency of recruitment
 
-**Development of a CRM system for automating and improving the efficiency of recruitment** - a project that is designed to automate, simplify, and accelerate employee recruitment. The users are HR managers, recruiters, department heads
+This system is tailored for medium to large local organizations — such as banks, telecom companies, or government institutions — where recruitment is handled by a dedicated HR department or team of recruiters.
+
+In such organizations, multiple departments operate independently, each led by a department head who regularly initiates hiring requests. The CRM system reflects this structure by supporting role-based access for:
+* **HR managers**, who oversee the entire recruitment process,
+* **Recruiters**, who work with candidates through various stages,
+* **Head of the departments**, who create job requests and track the hiring status for their teams.
+
+This role separation mirrors real business workflows and ensures clarity, accountability, and data security within the hiring process.
 
 ## 🚀 Key Features
 
