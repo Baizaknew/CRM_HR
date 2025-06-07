@@ -3,12 +3,12 @@
 
 # Development of a CRM system for automating and improving the efficiency of recruitment
 
-This system is tailored for medium to large local organizations — such as banks, telecom companies, or government institutions — where recruitment is handled by a dedicated HR department or team of recruiters.
+This system is tailored for medium to large local organizations - such as banks, telecom companies, or government institutions - where recruitment is handled by a dedicated HR department or team of recruiters.
 
 In such organizations, multiple departments operate independently, each led by a department head who regularly initiates hiring requests. The CRM system reflects this structure by supporting role-based access for:
-* **HR managers**, who oversee the entire recruitment process,
+* **HR Managers**, who oversee the entire recruitment process,
 * **Recruiters**, who work with candidates through various stages,
-* **Head of the departments**, who create job requests and track the hiring status for their teams.
+* **Head of the Departments**, who create job requests and track the hiring status for their teams.
 
 This role separation mirrors real business workflows and ensures clarity, accountability, and data security within the hiring process.
 
@@ -16,12 +16,16 @@ This role separation mirrors real business workflows and ensures clarity, accoun
 
 | Feature               | Description |
 |------------------------|-------------|
+| 🔐 **JWT Authentication**  | Secure access with token-based authentication (JWT) |  
 | 📝 **Job Requests**       | Submit structured vacancy requests with fields like department, position, and urgency. |
 | 🧑‍💼 **Role-Based Access** | Different roles (HR, Recruiter, Manager) see only what they need — nothing more.|
 | 👥 **Candidate Tracking** | Full pipeline with custom statuses: *screening → tech interview → HR interview → offer → accepted.* (you can update and add more if you wish) |
 | 🗂 **Vacancy Management** | Track and update job openings with statuses like: *taken into work, under consideration, closed.* (you can update and add more if you wish) |
 | 🌐 **Source Tracking**    | Track where candidates came from: *LinkedIn, Telegram, job boards, recommendations.. and others* |
 | 📎 **File Attachments**   | Store CVs, cover letters, documents per candidate |   
+| 💬 **Comments System**   | Add comments to job requests and vacancies for better team communication | 
+| 📧 **Email Notifications**   | Automatic emails are sent for key events like candidate assignment, job request creation, and vacancy status changes. | 
+| 📘 **Interactive API**  | Well-structured Swagger documentation for seamless integration with web and mobile frontends. |    
 
 ## Technology Stack
 
@@ -40,6 +44,7 @@ This role separation mirrors real business workflows and ensures clarity, accoun
 The database is designed using relational principles and normalized structure.  
 
 ![image](https://github.com/user-attachments/assets/2ef96726-586b-4523-84ae-b8ce841296ec)
+
 🔗 [Click here to view full interactive ERD](https://dbdiagram.io/d/crm_db_diagram-67f780f34f7afba18411b5f4)
 
 ## Installation
